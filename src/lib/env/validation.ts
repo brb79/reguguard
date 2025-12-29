@@ -125,4 +125,3 @@ if (typeof window === 'undefined') {
     console.warn('⚠️  Environment validation warning:', error instanceof Error ? error.message : error);
   }
 }
-

@@ -6,6 +6,7 @@ import { requireAuth } from '@/lib/auth';
 import { getEnv } from '@/lib/env';
 import { isAlertConfig, extractSingle } from '@/lib/supabase/query-types';
 import { complianceValidationService } from '@/lib/ai/compliance-validation-service';
+import { qaCacheService } from '@/lib/ai/qa-cache-service';
 
 // Type for license with employee relationship from query
 type LicenseWithEmployeeQuery = LicenseCache & {
@@ -264,10 +265,26 @@ export const GET = withErrorHandling(async () => {
         });
     }
 
+    // Clean up expired Q&A cache entries
+    let cacheEntriesDeleted = 0;
+    let cacheStats = { hitRate: 0, totalCached: 0, avgConfidence: 0 };
+    try {
+        cacheEntriesDeleted = await qaCacheService.cleanup();
+        cacheStats = await qaCacheService.getStats();
+        console.log(`[Cleanup] Deleted ${cacheEntriesDeleted} expired Q&A cache entries`);
+        console.log(`[Cache Stats] Hit rate: ${cacheStats.hitRate}%, Total: ${cacheStats.totalCached}, Avg confidence: ${cacheStats.avgConfidence}`);
+    } catch (error) {
+        console.error('[Cleanup] Error cleaning up Q&A cache:', error);
+    }
+
     return NextResponse.json({
         success: true,
         timestamp: new Date().toISOString(),
         clients_processed: clients.length,
         results,
+        cache_cleanup: {
+            entries_deleted: cacheEntriesDeleted,
+            stats: cacheStats,
+        },
     });
 });

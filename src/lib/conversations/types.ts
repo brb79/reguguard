@@ -13,6 +13,8 @@ export interface ConversationContext {
     phoneNumber: string;
     employeeName: string;
     licenseName: string | null;  // Null for general inquiry conversations
+    matchedState?: string | null;
+    matchedLicenseType?: string | null;
     winteamEmployeeNumber: number;
     winteamComplianceId: number | null;  // Null for general inquiry conversations
 }

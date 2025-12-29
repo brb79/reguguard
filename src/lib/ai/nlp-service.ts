@@ -33,7 +33,7 @@ export type ConversationIntent =
     | 'unknown';          // Could not classify
 
 export interface ExtractedEntity {
-    type: 'date' | 'license_number' | 'state' | 'phone' | 'email' | 'name';
+    type: 'date' | 'license_number' | 'license_type' | 'state' | 'phone' | 'email' | 'name';
     value: string;
     confidence: number;
 }
@@ -82,6 +82,7 @@ Analyze the following message and classify the intent. Consider:
 - Questions ("when does it expire?", "what do I need?", "how do I renew?")
 - Multi-language support (Spanish, etc.)
 - Sentiment and emotional tone
+- Extract state code or state name and license type if mentioned (armed/unarmed/etc.)
 
 Current conversation context:
 - Status: {status}
@@ -100,7 +101,7 @@ Respond with ONLY a valid JSON object in this exact format:
     "language": "en|es|other",
     "entities": [
         {
-            "type": "date|license_number|state|phone|email|name",
+            "type": "date|license_number|license_type|state|phone|email|name",
             "value": "extracted value",
             "confidence": 0.0-1.0
         }
@@ -541,4 +542,3 @@ Message: "${message}"`;
 
 // Export singleton
 export const nlpService = new NLPService();
-

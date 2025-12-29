@@ -12,6 +12,49 @@ export interface SMSResult {
     error?: string;
 }
 
+function splitSmsMessage(body: string, maxLength: number): string[] {
+    const trimmed = body.trim();
+    if (trimmed.length <= maxLength) {
+        return [trimmed];
+    }
+
+    const sentences = trimmed.split(/(?<=[.!?])\s+/);
+    const parts: string[] = [];
+    let current = '';
+
+    for (const sentence of sentences) {
+        if (!sentence) continue;
+        if (sentence.length > maxLength) {
+            if (current) {
+                parts.push(current.trim());
+                current = '';
+            }
+            for (let i = 0; i < sentence.length; i += maxLength) {
+                parts.push(sentence.slice(i, i + maxLength).trim());
+            }
+            continue;
+        }
+
+        if (!current) {
+            current = sentence;
+            continue;
+        }
+
+        if (current.length + sentence.length + 1 <= maxLength) {
+            current = `${current} ${sentence}`;
+        } else {
+            parts.push(current.trim());
+            current = sentence;
+        }
+    }
+
+    if (current.trim()) {
+        parts.push(current.trim());
+    }
+
+    return parts.length > 0 ? parts : [trimmed];
+}
+
 class SMSService {
     private client: twilio.Twilio | null = null;
     private fromNumber: string;
@@ -65,6 +108,20 @@ class SMSService {
                 error: error instanceof Error ? error.message : 'Unknown error',
             };
         }
+    }
+
+    /**
+     * Send a long message split into multiple SMS segments.
+     */
+    async sendLong(message: SMSMessage, maxLength: number = 153): Promise<SMSResult[]> {
+        const parts = splitSmsMessage(message.body, maxLength);
+        const results: SMSResult[] = [];
+
+        for (const part of parts) {
+            results.push(await this.send({ ...message, body: part }));
+        }
+
+        return results;
     }
 
     /**

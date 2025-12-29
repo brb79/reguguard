@@ -16,6 +16,7 @@ import { getEnv } from '@/lib/env';
 import { extractSingle } from '../supabase/query-types';
 import { nlpService } from '../ai/nlp-service';
 import { licenseMatchingService } from '../ai/matching-service';
+import { complianceQAService } from '../ai/compliance-qa-service';
 
 // ============================================================================
 // Message Templates
@@ -60,6 +61,7 @@ export const messageTemplates = {
         `• Send a PHOTO of your renewed license\n` +
         `• Reply YES to confirm extracted info\n` +
         `• Reply NO to submit a new photo\n` +
+        `• Ask a compliance question (state/license)\n` +
         `• Contact your supervisor for other issues`,
 
     unknownCommand: () =>
@@ -290,7 +292,12 @@ class ConversationService {
             license_id: string | null;
             client_id: string;
             employees_cache: { first_name: string; last_name: string; winteam_employee_number: string };
-            licenses_cache: { description: string; winteam_compliance_id: string } | null;
+            licenses_cache: {
+                description: string;
+                winteam_compliance_id: string;
+                matched_state: string | null;
+                matched_license_type: string | null;
+            } | null;
         };
 
         const { data } = await this.supabase
@@ -308,7 +315,9 @@ class ConversationService {
                 ),
                 licenses_cache (
                     description,
-                    winteam_compliance_id
+                    winteam_compliance_id,
+                    matched_state,
+                    matched_license_type
                 )
             `)
             .eq('id', conversationId)
@@ -331,6 +340,8 @@ class ConversationService {
             phoneNumber: data.phone_number,
             employeeName: `${employee.first_name} ${employee.last_name}`,
             licenseName: license?.description || null,
+            matchedState: license?.matched_state || null,
+            matchedLicenseType: license?.matched_license_type || null,
             winteamEmployeeNumber: parseInt(employee.winteam_employee_number, 10),
             winteamComplianceId: license ? parseInt(license.winteam_compliance_id, 10) : null,
         };
@@ -724,8 +735,39 @@ class ConversationService {
                             return { handled: true, response: 'retry', intent };
 
                         case 'question':
-                            // Answer question with AI-generated response
-                            const questionResponse = analysis.response ||
+                            // Answer compliance questions using web-grounded QA
+                            const stateEntity = analysis.intent.entities?.find((entity) => entity.type === 'state');
+                            const licenseTypeEntity = analysis.intent.entities?.find((entity) => entity.type === 'license_type');
+                            const qaResult = await complianceQAService.answerQuestion({
+                                question: message,
+                                context,
+                                stateCode: stateEntity?.value,
+                                licenseType: licenseTypeEntity?.value || context.matchedLicenseType || null,
+                            });
+
+                            if (qaResult.followUpQuestion) {
+                                await smsService.send({
+                                    to: context.phoneNumber,
+                                    body: qaResult.followUpQuestion,
+                                });
+                                return { handled: true, response: 'question_clarification', intent };
+                            }
+
+                            if (qaResult.answer) {
+                                const citations = qaResult.sources.slice(0, 2);
+                                const responseBody = citations.length > 0
+                                    ? `${qaResult.answer} Sources: ${citations.join(' ')}`
+                                    : qaResult.answer;
+
+                                await smsService.sendLong({
+                                    to: context.phoneNumber,
+                                    body: responseBody,
+                                });
+                                return { handled: true, response: 'question_answered', intent };
+                            }
+
+                            // Fallback to AI-generated response if QA fails
+                            const fallbackResponse = analysis.response ||
                                 await nlpService.generateResponse(
                                     analysis.intent,
                                     context,
@@ -735,7 +777,7 @@ class ConversationService {
                                 );
                             await smsService.send({
                                 to: context.phoneNumber,
-                                body: questionResponse,
+                                body: fallbackResponse,
                             });
                             return { handled: true, response: 'question_answered', intent };
 
