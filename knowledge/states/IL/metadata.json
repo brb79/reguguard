@@ -1,0 +1,125 @@
+{
+    "state_code": "IL",
+    "state_name": "Illinois",
+    "regulatory_body": {
+        "name": "Illinois Department of Financial and Professional Regulation",
+        "abbreviation": "IDFPR",
+        "website": "https://idfpr.illinois.gov"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "perc_unarmed",
+            "display_name": "PERC Card (Unarmed Security)",
+            "renewal_period_months": 36,
+            "initial_training_hours": 20,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "PERC Card",
+                "Permanent Employee Registration Card",
+                "IL Security Guard",
+                "Unarmed Security",
+                "Security Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "High school diploma or GED",
+                    "U.S. resident or valid work visa",
+                    "No felony convictions or dishonorable military discharge",
+                    "20 hours IDFPR-approved basic security training",
+                    "Fingerprint background check via IDFPR vendor (within 60 days)",
+                    "8 additional hours site-specific training within 6 months (contractor agencies)"
+                ],
+                "renewal": [
+                    "8 hours annual training (as of July 2021, PA 102-0152)",
+                    "PERC card valid for 3 years"
+                ]
+            },
+            "fees": {
+                "application": 55,
+                "currency": "USD"
+            }
+        },
+        {
+            "type": "firearm_control_card",
+            "display_name": "Firearm Control Card (Armed Security)",
+            "renewal_period_months": 36,
+            "initial_training_hours": 48,
+            "renewal_training_hours": 16,
+            "compliance_item_descriptions": [
+                "Firearm Control Card",
+                "Armed Security Guard",
+                "IL Armed Guard",
+                "Armed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "Must hold valid PERC card",
+                    "Valid Illinois FOID (Firearm Owner's ID) card",
+                    "20 hours basic security training (PERC requirement)",
+                    "28 hours mandatory firearms training (as of PA 102-152)",
+                    "Range qualification test",
+                    "Background check"
+                ],
+                "renewal": [
+                    "8 hours annual general training",
+                    "8 hours annual firearms training",
+                    "Total: 16 hours annual training",
+                    "Range re-qualification within 1 year of renewal"
+                ]
+            },
+            "fees": {
+                "application": 75,
+                "currency": "USD"
+            }
+        }
+    ],
+    "training_topics": {
+        "basic_security": [
+            "Roles and responsibilities",
+            "Criminal law",
+            "Patrol techniques",
+            "Use of force",
+            "Report writing",
+            "Emergency procedures"
+        ],
+        "firearms": [
+            "Proper shooting techniques",
+            "Legal aspects of firearm use",
+            "Illinois concealed carry laws",
+            "Safe handling, storage, maintenance"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fbi_check_required": true,
+        "fingerprinting_required": true,
+        "foid_required_for_armed": true
+    },
+    "recent_changes": {
+        "public_act_102_152_effective": "2021-07-01",
+        "changes": [
+            "8 hours annual training required for all security officers",
+            "Armed guards: 28 hours firearms training (increased)",
+            "Armed guards: 16 hours annual training (8 general + 8 firearms)"
+        ]
+    },
+    "contact": {
+        "website": "https://idfpr.illinois.gov/profs/perc.asp"
+    },
+    "sources": [
+        {
+            "title": "IDFPR - PERC Information",
+            "url": "https://idfpr.illinois.gov",
+            "accessed_date": "2024-12-27"
+        },
+        {
+            "title": "Public Act 102-0152",
+            "url": "https://www.ilga.gov",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

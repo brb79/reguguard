@@ -1,0 +1,84 @@
+{
+  "state_code": "VA",
+  "state_name": "Virginia",
+  "regulatory_body": {
+    "name": "Department of Criminal Justice Services",
+    "abbreviation": "DCJS",
+    "website": "https://www.dcjs.virginia.gov"
+  },
+  "effective_date": "2024-01-01",
+  "license_types": [
+    {
+      "type": "armed_security_officer",
+      "display_name": "Armed Security Officer",
+      "renewal_period_months": 24,
+      "initial_training_hours": 40,
+      "renewal_training_hours": 8,
+      "compliance_item_descriptions": [
+        "Gun License",
+        "Armed Guard License",
+        "Armed Security Officer"
+      ],
+      "requirements": {
+        "initial": [
+          "18 years of age or older",
+          "High school diploma or GED",
+          "Background check through DCJS",
+          "40 hours of entry-level training",
+          "Firearms qualification",
+          "First aid/CPR certification"
+        ],
+        "renewal": [
+          "8 hours of in-service training",
+          "Firearms re-qualification",
+          "No disqualifying criminal history"
+        ]
+      }
+    },
+    {
+      "type": "unarmed_security_officer",
+      "display_name": "Unarmed Security Officer",
+      "renewal_period_months": 24,
+      "initial_training_hours": 18,
+      "renewal_training_hours": 4,
+      "compliance_item_descriptions": [
+        "Security Officer License",
+        "Unarmed Guard License",
+        "Unarmed Security Officer"
+      ],
+      "requirements": {
+        "initial": [
+          "18 years of age or older",
+          "Background check through DCJS",
+          "18 hours of entry-level training"
+        ],
+        "renewal": [
+          "4 hours of in-service training",
+          "No disqualifying criminal history"
+        ]
+      }
+    }
+  ],
+  "training_topics": {
+    "entry_level": [
+      "Legal powers and limitations",
+      "Emergency procedures",
+      "General duties",
+      "Report writing",
+      "Patrol techniques",
+      "Deportment and ethics"
+    ],
+    "firearms": [
+      "Legal issues regarding firearms",
+      "Firearms safety",
+      "Care and cleaning of firearms",
+      "Marksmanship fundamentals",
+      "Range qualification"
+    ]
+  },
+  "contact": {
+    "phone": "(804) 786-4000",
+    "email": "dcjs@dcjs.virginia.gov",
+    "address": "1100 Bank Street, Richmond, VA 23219"
+  }
+}

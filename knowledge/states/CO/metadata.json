@@ -1,0 +1,80 @@
+{
+    "state_code": "CO",
+    "state_name": "Colorado",
+    "regulatory_body": {
+        "name": "Local Jurisdiction (No State License)",
+        "abbreviation": "LOCAL",
+        "notes": "Colorado has NO statewide security guard licensing. Regulated by cities/counties."
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "local_security_guard",
+            "display_name": "Security Guard (Local License)",
+            "renewal_period_months": 0,
+            "initial_training_hours": 0,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "CO Security",
+                "Local Guard License"
+            ],
+            "requirements": {
+                "initial": [
+                    "Requirements vary by city/county",
+                    "Generally 18+ years old",
+                    "Criminal background check",
+                    "Denver: 16 hours training",
+                    "Colorado Springs: 8 hours training",
+                    "Some areas: no specific requirements"
+                ],
+                "renewal": [
+                    "Varies by jurisdiction"
+                ]
+            },
+            "notes": "Check with local City Clerk's Office for specific requirements"
+        },
+        {
+            "type": "armed_security_guard",
+            "display_name": "Armed Security Guard",
+            "renewal_period_months": 0,
+            "initial_training_hours": 0,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Armed Security",
+                "CO Armed Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "Meet local unarmed requirements first",
+                    "Valid Colorado CCW permit",
+                    "Peace officer-equivalent firearms training"
+                ],
+                "renewal": [
+                    "Varies by jurisdiction"
+                ]
+            }
+        }
+    ],
+    "local_examples": {
+        "denver": {
+            "training_hours": 16
+        },
+        "colorado_springs": {
+            "training_hours": 8
+        }
+    },
+    "pending_legislation": {
+        "bill": "HB 25-1262",
+        "status": "Postpone Indefinitely (as of 2025)",
+        "would_create": "State Board of Private Security Services"
+    },
+    "sources": [
+        {
+            "title": "Colorado.gov",
+            "url": "https://colorado.gov",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

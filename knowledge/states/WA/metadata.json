@@ -1,0 +1,103 @@
+{
+    "state_code": "WA",
+    "state_name": "Washington",
+    "regulatory_body": {
+        "name": "Washington State Department of Licensing",
+        "abbreviation": "DOL",
+        "firearms_authority": "Washington State Criminal Justice Training Commission (WSCJTC)",
+        "website": "https://www.dol.wa.gov/business/security"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "private_security_guard",
+            "display_name": "Private Security Guard (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 16,
+            "renewal_training_hours": 4,
+            "compliance_item_descriptions": [
+                "Security Guard License",
+                "WA Security Guard",
+                "DOL Security License",
+                "Unarmed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "U.S. citizen or permanent resident",
+                    "Employment offer from licensed security company",
+                    "8-hour pre-assignment training",
+                    "8-hour post-assignment training within 12 months",
+                    "Fingerprint-based background check (IdentoGO)",
+                    "No disqualifying criminal convictions"
+                ],
+                "renewal": [
+                    "4 hours annual refresher training"
+                ]
+            },
+            "training_breakdown": {
+                "pre_assignment_hours": 8,
+                "post_assignment_hours": 8,
+                "total_initial_hours": 16,
+                "annual_refresher": 4
+            }
+        },
+        {
+            "type": "armed_private_security",
+            "display_name": "Armed Private Security Guard",
+            "renewal_period_months": 24,
+            "initial_training_hours": 24,
+            "renewal_training_hours": 4,
+            "compliance_item_descriptions": [
+                "Armed Security License",
+                "WA Armed Guard",
+                "Armed Security",
+                "Firearms Certificate"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "Hold unarmed security license first",
+                    "8-hour WSCJTC firearms certification course",
+                    "Qualify with each firearm type carried",
+                    "Background check"
+                ],
+                "renewal": [
+                    "Annual firearms requalification",
+                    "4 hours refresher training"
+                ]
+            },
+            "fees": {
+                "armed_status_addon": 10,
+                "currency": "USD"
+            },
+            "notes": "WSCJTC provides list of approved firearms instructors"
+        }
+    ],
+    "training_topics": {
+        "pre_assignment": [
+            "Basic security guard principles",
+            "Legal powers and limitations",
+            "Accident prevention and safety",
+            "Emergency response",
+            "Report writing",
+            "Conflict resolution and ethics",
+            "Public interaction"
+        ]
+    },
+    "background_check": {
+        "fingerprinting_required": true,
+        "identogo_used": true
+    },
+    "contact": {
+        "website": "https://www.dol.wa.gov/business/security"
+    },
+    "sources": [
+        {
+            "title": "WA DOL - Security Guard Licensing",
+            "url": "https://www.dol.wa.gov/business/security",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

@@ -1,0 +1,102 @@
+{
+    "state_code": "NJ",
+    "state_name": "New Jersey",
+    "regulatory_body": {
+        "name": "New Jersey State Police",
+        "abbreviation": "NJSP",
+        "program": "Security Officer Registration Act (SORA)",
+        "website": "https://www.nj.gov/njsp/sora/"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "sora_unarmed",
+            "display_name": "SORA Security Officer (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 24,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "SORA Certification",
+                "NJ Security Guard",
+                "Security Officer Registration",
+                "Unarmed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "U.S. citizen or legal resident",
+                    "High school diploma or GED",
+                    "Valid Social Security number",
+                    "24-hour SORA training (NJSP-certified instructor)",
+                    "  - 8 hours pre-assignment",
+                    "  - 16 hours on-the-job training",
+                    "Training completed within 30-day period",
+                    "Criminal background check (NJSP and FBI fingerprinting)",
+                    "Physically and mentally fit"
+                ],
+                "renewal": [
+                    "8-hour refresher course every 2 years",
+                    "Begin renewal 30-90 days before expiration"
+                ]
+            },
+            "fees": {
+                "renewal": 80.87,
+                "currency": "USD"
+            }
+        },
+        {
+            "type": "sora_armed",
+            "display_name": "SORA Security Officer (Armed)",
+            "renewal_period_months": 12,
+            "initial_training_hours": 24,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Armed Security Officer",
+                "NJ Armed Guard",
+                "Armed SORA"
+            ],
+            "requirements": {
+                "initial": [
+                    "Complete unarmed SORA requirements",
+                    "Additional firearms training",
+                    "Criminal background check"
+                ],
+                "renewal": [
+                    "8-hour refresher course annually"
+                ]
+            }
+        }
+    ],
+    "training_topics": {
+        "sora_24_hour": [
+            "NJ Attorney General Use of Force Policy",
+            "Terrorism awareness",
+            "Cargo theft",
+            "Security measures",
+            "Critical infrastructure awareness",
+            "Suspicious packages",
+            "First aid awareness",
+            "Ethics",
+            "Report writing"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fbi_check_required": true,
+        "fingerprinting_required": true
+    },
+    "expiration_notes": {
+        "expired_license": "May need to retake full 24-hour course"
+    },
+    "contact": {
+        "website": "https://www.nj.gov/njsp/sora/"
+    },
+    "sources": [
+        {
+            "title": "NJ State Police - SORA",
+            "url": "https://www.nj.gov/njsp/sora/",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

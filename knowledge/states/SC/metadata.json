@@ -1,0 +1,81 @@
+{
+    "state_code": "SC",
+    "state_name": "South Carolina",
+    "regulatory_body": {
+        "name": "South Carolina Law Enforcement Division",
+        "abbreviation": "SLED",
+        "website": "https://www.sled.sc.gov"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "security_officer",
+            "display_name": "Security Officer (Unarmed)",
+            "renewal_period_months": 12,
+            "initial_training_hours": 6,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Security Officer",
+                "SC Security Guard",
+                "SLED Registration"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "U.S. citizen or resident alien",
+                    "Employed by SLED-licensed security company",
+                    "4 hours SLED-approved basic training (Primary Basic)",
+                    "2 hours company orientation",
+                    "Pass written exam (85%)",
+                    "Criminal background check + fingerprinting"
+                ],
+                "renewal": [
+                    "Annual renewal ($65 fee)"
+                ]
+            },
+            "fees": {
+                "annual_registration": 65,
+                "currency": "USD"
+            }
+        },
+        {
+            "type": "armed_security_officer",
+            "display_name": "Armed Security Officer",
+            "renewal_period_months": 12,
+            "initial_training_hours": 10,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Armed Security",
+                "SC Armed Guard",
+                "Armed Officer"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "Complete unarmed registration first",
+                    "4 hours SLED firearms training",
+                    "Demonstrate firearm proficiency"
+                ],
+                "renewal": [
+                    "Annual renewal ($110 fee)"
+                ]
+            },
+            "fees": {
+                "annual_registration": 110,
+                "currency": "USD"
+            },
+            "notes": "Only handguns permitted; rifles/shotguns not allowed"
+        }
+    ],
+    "contact": {
+        "website": "https://www.sled.sc.gov"
+    },
+    "sources": [
+        {
+            "title": "SLED",
+            "url": "https://www.sled.sc.gov",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

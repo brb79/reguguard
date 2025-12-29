@@ -1,0 +1,66 @@
+{
+    "state_code": "MI",
+    "state_name": "Michigan",
+    "regulatory_body": {
+        "name": "Department of Licensing and Regulatory Affairs",
+        "abbreviation": "LARA",
+        "website": "https://www.michigan.gov/lara"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "security_guard_employee",
+            "display_name": "Security Guard Employee",
+            "renewal_period_months": 0,
+            "initial_training_hours": 0,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "MI Security Guard",
+                "Security Employee"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "Legally authorized to work in U.S.",
+                    "High school diploma or GED",
+                    "Clean criminal record",
+                    "Employer conducts fingerprint background check (ICHAT)",
+                    "Registered under employer's agency license"
+                ],
+                "renewal": [
+                    "No state-level renewal for employees"
+                ]
+            },
+            "notes": "Michigan does NOT issue individual guard cards. Guards work under agency license. Training at employer discretion."
+        }
+    ],
+    "training_topics": {
+        "recommended": [
+            "Basic security procedures",
+            "Legal authority",
+            "Emergency response"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fingerprinting_required": true,
+        "ichat_used": true
+    },
+    "unique_structure": {
+        "individual_license": false,
+        "agency_license_required": true,
+        "guards_under_agency": true
+    },
+    "contact": {
+        "website": "https://www.michigan.gov/lara"
+    },
+    "sources": [
+        {
+            "title": "Michigan LARA - Private Security",
+            "url": "https://www.michigan.gov/lara",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

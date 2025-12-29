@@ -1,0 +1,127 @@
+{
+    "state_code": "CA",
+    "state_name": "California",
+    "regulatory_body": {
+        "name": "Bureau of Security and Investigative Services",
+        "abbreviation": "BSIS",
+        "parent_agency": "Department of Consumer Affairs",
+        "website": "https://www.bsis.ca.gov",
+        "licensing_portal": "https://www.breeze.ca.gov"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "guard_card",
+            "display_name": "Guard Card (Security Guard Registration)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 40,
+            "renewal_training_hours": 16,
+            "compliance_item_descriptions": [
+                "Guard Card",
+                "BSIS Guard Card",
+                "Security Guard Registration",
+                "CA Guard Card",
+                "Security Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "8 hours pre-licensing training (Powers to Arrest, Use of Force)",
+                    "Pass written exam after pre-licensing training",
+                    "Fingerprint-based background check (Live Scan)",
+                    "16 hours additional training within 30 days of employment",
+                    "16 more hours within 6 months (32 hours skills training total)"
+                ],
+                "renewal": [
+                    "8 hours continuing education annually (16 hours total for 2-year period)",
+                    "Minimum 2 hours on use of force topics annually",
+                    "Submit renewal 60-90 days before expiration",
+                    "Re-fingerprinting required"
+                ]
+            },
+            "fees": {
+                "renewal_on_time": 40,
+                "renewal_late_60_days": 65,
+                "currency": "USD"
+            },
+            "training_breakdown": {
+                "pre_licensing_hours": 8,
+                "within_30_days_hours": 16,
+                "within_6_months_hours": 16,
+                "total_initial_hours": 40,
+                "annual_continuing_ed": 8
+            }
+        },
+        {
+            "type": "firearms_permit",
+            "display_name": "Firearms Permit (Armed Guard)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 16,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Firearms Permit",
+                "Armed Guard",
+                "BSIS Firearms",
+                "CA Armed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "Must hold valid Guard Card",
+                    "21 years of age or older",
+                    "14 hours classroom and range instruction",
+                    "2 hours assessment/requalification",
+                    "Range qualification",
+                    "Additional background check",
+                    "Psychological evaluation may be required by employer"
+                ],
+                "renewal": [
+                    "4 hours continuing education per year (firearms-specific)",
+                    "Range requalification",
+                    "Valid Guard Card required"
+                ]
+            }
+        }
+    ],
+    "training_topics": {
+        "pre_licensing": [
+            "Powers to arrest",
+            "Appropriate use of force"
+        ],
+        "skills_training": [
+            "Public relations",
+            "Observation and reporting",
+            "Liability and legal aspects",
+            "Handling difficult people",
+            "Emergency procedures",
+            "Communication and conflict resolution",
+            "Terrorism awareness"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fbi_check_required": true,
+        "fingerprinting_required": true,
+        "live_scan_required": true
+    },
+    "important_notes": {
+        "work_while_training": "Can begin work after 8-hour pre-licensing, must complete remaining training on schedule",
+        "expired_over_60_days": "Must submit new application, cannot renew"
+    },
+    "contact": {
+        "phone": "(916) 322-4000",
+        "website": "https://www.bsis.ca.gov"
+    },
+    "sources": [
+        {
+            "title": "BSIS Guard Card Information",
+            "url": "https://www.bsis.ca.gov",
+            "accessed_date": "2024-12-27"
+        },
+        {
+            "title": "California Code of Regulations",
+            "url": "https://www.ca.gov",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

@@ -1,0 +1,112 @@
+{
+    "state_code": "GA",
+    "state_name": "Georgia",
+    "regulatory_body": {
+        "name": "Georgia Board of Private Detective and Security Agencies",
+        "abbreviation": "GBPDSA",
+        "parent_agency": "Georgia Secretary of State",
+        "website": "https://sos.ga.gov/page/private-detective-and-security-agencies"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "security_guard_unarmed",
+            "display_name": "Security Guard (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 24,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "GA Security Guard",
+                "Unarmed Security",
+                "Registered Security Employee"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "High school diploma or GED",
+                    "U.S. citizen or legal resident with work authorization",
+                    "24 hours board-approved classroom instruction",
+                    "Criminal background check via GAPS (fingerprinting)",
+                    "Training can be in-person or Board-approved online"
+                ],
+                "renewal": [
+                    "8 hours continuing education (first renewal exempt)",
+                    "  - 2 hours Homeland Security",
+                    "  - 2 hours firearms-related",
+                    "  - 4 hours industry-related"
+                ]
+            },
+            "notes": "Unarmed guards not mandated to register with GBPDSA, but training required"
+        },
+        {
+            "type": "security_guard_armed",
+            "display_name": "Security Guard (Armed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 39,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Armed Security Guard",
+                "GA Armed Guard",
+                "Armed Security",
+                "Weapons Permit"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "24 hours basic training (same as unarmed)",
+                    "15 hours additional firearms training (in-person only)",
+                    "Valid Georgia Weapons Carry License (WCL)",
+                    "Criminal background check via GAPS"
+                ],
+                "renewal": [
+                    "8 hours continuing education",
+                    "Annual weapon qualification with proof of range scores"
+                ]
+            }
+        }
+    ],
+    "training_topics": {
+        "basic_24_hour": [
+            "Role of private security officer",
+            "Legal aspects",
+            "Use of force",
+            "Patrol and observation techniques",
+            "Incident response",
+            "Security resources",
+            "Customer service",
+            "Basic emergency first aid"
+        ],
+        "continuing_education": [
+            "Homeland Security (indicators of terrorism, cooperation with HS agencies)",
+            "Firearms-related training",
+            "Industry-related training"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fingerprinting_required": true,
+        "gaps_required": true
+    },
+    "special_notes": {
+        "first_renewal_exempt": "First-time renewals exempt from continuing education requirement",
+        "firearms_training_online": "Firearms training cannot be completed online",
+        "annual_weapon_qualification": "Armed guards must qualify annually; agency/license holder maintains range scores"
+    },
+    "contact": {
+        "website": "https://sos.ga.gov/page/private-detective-and-security-agencies"
+    },
+    "sources": [
+        {
+            "title": "Georgia Secretary of State - Private Detective and Security Agencies",
+            "url": "https://sos.ga.gov/page/private-detective-and-security-agencies",
+            "accessed_date": "2024-12-27"
+        },
+        {
+            "title": "Georgia Board Rules",
+            "url": "https://ga.gov",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

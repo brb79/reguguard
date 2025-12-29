@@ -1,0 +1,79 @@
+{
+    "state_code": "MA",
+    "state_name": "Massachusetts",
+    "regulatory_body": {
+        "name": "Massachusetts State Police Certification Unit",
+        "abbreviation": "MSP",
+        "website": "https://www.mass.gov/state-police"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "unarmed_security_guard",
+            "display_name": "Unarmed Security Guard",
+            "renewal_period_months": 0,
+            "initial_training_hours": 0,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "MA Security Guard",
+                "Unarmed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "U.S. citizen or legal resident",
+                    "Criminal background check with fingerprinting",
+                    "Drug screening",
+                    "High school diploma or GED",
+                    "Training at employer's discretion"
+                ],
+                "renewal": [
+                    "No state-mandated renewal"
+                ]
+            },
+            "notes": "MA does NOT require individual licenses for unarmed guards. Agencies are licensed by MSP."
+        },
+        {
+            "type": "armed_security_guard",
+            "display_name": "Armed Security Guard",
+            "renewal_period_months": 12,
+            "initial_training_hours": 20,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Armed Security",
+                "LTC Security",
+                "MA Armed Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "License to Carry (LTC) from local police",
+                    "State-approved firearms training class",
+                    "Additional 20 hours firearms training",
+                    "Background check and drug test"
+                ],
+                "renewal": [
+                    "Annual firearms re-qualification"
+                ]
+            }
+        }
+    ],
+    "unique_structure": {
+        "individual_license": false,
+        "agency_license_required": true,
+        "agency_license_fee": 550,
+        "surety_bond": 5000
+    },
+    "contact": {
+        "website": "https://www.mass.gov/state-police"
+    },
+    "sources": [
+        {
+            "title": "Mass.gov State Police",
+            "url": "https://www.mass.gov",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

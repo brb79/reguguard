@@ -1,0 +1,132 @@
+{
+    "state_code": "NY",
+    "state_name": "New York",
+    "regulatory_body": {
+        "name": "New York Department of State",
+        "abbreviation": "DOS",
+        "training_authority": "Division of Criminal Justice Services (DCJS)",
+        "website": "https://dos.ny.gov"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "security_guard_registration",
+            "display_name": "Security Guard Registration (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 24,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Security Guard Registration",
+                "NY Security Guard",
+                "Guard Registration Card",
+                "Unarmed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "8-hour pre-assignment training (before registration)",
+                    "16-hour on-the-job training within 90 days of employment",
+                    "Fingerprint-based background check",
+                    "No serious criminal offense convictions",
+                    "NYS photo driver's license or non-driver ID",
+                    "U.S. citizen or lawful resident with work authorization",
+                    "Training at DCJS-approved schools only"
+                ],
+                "renewal": [
+                    "8-hour annual in-service training each calendar year",
+                    "Renewal form mailed 90 days before expiration",
+                    "Schools submit completion records to DCJS electronically"
+                ]
+            },
+            "training_breakdown": {
+                "pre_assignment_hours": 8,
+                "on_the_job_hours": 16,
+                "annual_in_service": 8,
+                "total_initial_hours": 24
+            }
+        },
+        {
+            "type": "armed_guard_registration",
+            "display_name": "Armed Guard Registration",
+            "renewal_period_months": 24,
+            "initial_training_hours": 71,
+            "renewal_training_hours": 16,
+            "compliance_item_descriptions": [
+                "Armed Guard Registration",
+                "NY Armed Security",
+                "Special Armed Guard Card",
+                "Armed Security Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "Must hold valid NYS Pistol Permit",
+                    "Must hold unarmed security guard registration",
+                    "47-hour firearms training course",
+                    "  - 7 hours classroom (Penal Law Article 35, Use of Force)",
+                    "  - 40 hours range instruction and qualification",
+                    "All unarmed training requirements (24 hours)",
+                    "DCJS-approved training school"
+                ],
+                "renewal": [
+                    "8-hour annual firearms training each calendar year",
+                    "8-hour annual in-service training (same as unarmed)",
+                    "Total: 16 hours annual training for armed guards"
+                ]
+            },
+            "training_breakdown": {
+                "unarmed_training_hours": 24,
+                "firearms_classroom_hours": 7,
+                "firearms_range_hours": 40,
+                "total_initial_hours": 71,
+                "annual_firearms_training": 8,
+                "annual_in_service": 8
+            }
+        }
+    ],
+    "training_topics": {
+        "pre_assignment": [
+            "Role of the security guard",
+            "Legal powers and limitations",
+            "Emergency procedures",
+            "Communication skills"
+        ],
+        "on_the_job": [
+            "Worksite-specific duties",
+            "Employer requirements",
+            "Practical application"
+        ],
+        "firearms": [
+            "NYS Penal Law Article 35 (Use of Force/Deadly Physical Force)",
+            "Range instruction",
+            "Firearms qualification"
+        ]
+    },
+    "background_check": {
+        "fingerprinting_required": true,
+        "criminal_history_check": true
+    },
+    "exemptions": {
+        "retired_peace_police_under_10_years": "Exempt from 8hr pre-assignment, 16hr OJT, 47hr firearms. Must complete 8hr annual firearms if armed.",
+        "retired_peace_police_over_10_years": "Must complete 8hr annual in-service. If armed, must complete 8hr annual firearms."
+    },
+    "important_notes": {
+        "expired_over_6_months": "Must reapply for new registration",
+        "training_submission": "Schools submit records to DCJS; individuals cannot submit certificates"
+    },
+    "contact": {
+        "website": "https://dos.ny.gov/security-guard"
+    },
+    "sources": [
+        {
+            "title": "NY DOS - Security Guard Information",
+            "url": "https://dos.ny.gov/security-guard",
+            "accessed_date": "2024-12-27"
+        },
+        {
+            "title": "NY.gov Security Guard Training Requirements",
+            "url": "https://www.ny.gov",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

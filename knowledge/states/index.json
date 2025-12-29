@@ -1,0 +1,208 @@
+{
+    "version": "1.0",
+    "last_updated": "2024-12-29",
+    "states": {
+        "VA": {
+            "status": "complete",
+            "regulatory_body": "DCJS",
+            "last_verified": "2024-01-01"
+        },
+        "DC": {
+            "status": "complete",
+            "regulatory_body": "SOMB/DCRA",
+            "last_verified": "2024-12-27"
+        },
+        "MD": {
+            "status": "complete",
+            "regulatory_body": "MSPSL",
+            "last_verified": "2024-12-27"
+        },
+        "TX": {
+            "status": "complete",
+            "regulatory_body": "DPS",
+            "last_verified": "2024-12-27"
+        },
+        "FL": {
+            "status": "complete",
+            "regulatory_body": "FDACS",
+            "last_verified": "2024-12-27"
+        },
+        "CA": {
+            "status": "complete",
+            "regulatory_body": "BSIS",
+            "last_verified": "2024-12-27"
+        },
+        "NY": {
+            "status": "complete",
+            "regulatory_body": "DOS/DCJS",
+            "last_verified": "2024-12-27"
+        },
+        "PA": {
+            "status": "complete",
+            "regulatory_body": "PSP",
+            "last_verified": "2024-12-27"
+        },
+        "IL": {
+            "status": "complete",
+            "regulatory_body": "IDFPR",
+            "last_verified": "2024-12-27"
+        },
+        "GA": {
+            "status": "complete",
+            "regulatory_body": "GBPDSA",
+            "last_verified": "2024-12-27"
+        },
+        "NC": {
+            "status": "complete",
+            "regulatory_body": "PPSB",
+            "last_verified": "2024-12-29"
+        },
+        "NJ": {
+            "status": "complete",
+            "regulatory_body": "NJSP/SORA",
+            "last_verified": "2024-12-29"
+        },
+        "OH": {
+            "status": "complete",
+            "regulatory_body": "PISGS/OPOTC",
+            "last_verified": "2024-12-29"
+        },
+        "MI": {
+            "status": "complete",
+            "regulatory_body": "LARA",
+            "last_verified": "2024-12-29"
+        },
+        "AZ": {
+            "status": "complete",
+            "regulatory_body": "DPS",
+            "last_verified": "2024-12-29"
+        },
+        "WA": {
+            "status": "complete",
+            "regulatory_body": "DOL/WSCJTC",
+            "last_verified": "2024-12-29"
+        },
+        "MA": {
+            "status": "complete",
+            "regulatory_body": "MSP (agency-based)",
+            "last_verified": "2024-12-29"
+        },
+        "CT": {
+            "status": "complete",
+            "regulatory_body": "DESPP",
+            "last_verified": "2024-12-29"
+        },
+        "CO": {
+            "status": "complete",
+            "regulatory_body": "LOCAL",
+            "last_verified": "2024-12-29"
+        },
+        "TN": {
+            "status": "complete",
+            "regulatory_body": "TDCI",
+            "last_verified": "2024-12-29"
+        },
+        "SC": {
+            "status": "complete",
+            "regulatory_body": "SLED",
+            "last_verified": "2024-12-29"
+        },
+        "LA": {
+            "status": "complete",
+            "regulatory_body": "LSBPSE",
+            "last_verified": "2024-12-29"
+        },
+        "AL": {
+            "status": "pending"
+        },
+        "AK": {
+            "status": "pending"
+        },
+        "AR": {
+            "status": "pending"
+        },
+        "DE": {
+            "status": "pending"
+        },
+        "HI": {
+            "status": "pending"
+        },
+        "ID": {
+            "status": "pending"
+        },
+        "IN": {
+            "status": "pending"
+        },
+        "IA": {
+            "status": "pending"
+        },
+        "KS": {
+            "status": "pending"
+        },
+        "KY": {
+            "status": "pending"
+        },
+        "ME": {
+            "status": "pending"
+        },
+        "MN": {
+            "status": "pending"
+        },
+        "MS": {
+            "status": "pending"
+        },
+        "MO": {
+            "status": "pending"
+        },
+        "MT": {
+            "status": "pending"
+        },
+        "NE": {
+            "status": "pending"
+        },
+        "NV": {
+            "status": "pending"
+        },
+        "NH": {
+            "status": "pending"
+        },
+        "NM": {
+            "status": "pending"
+        },
+        "ND": {
+            "status": "pending"
+        },
+        "OK": {
+            "status": "pending"
+        },
+        "OR": {
+            "status": "pending"
+        },
+        "RI": {
+            "status": "pending"
+        },
+        "SD": {
+            "status": "pending"
+        },
+        "UT": {
+            "status": "pending"
+        },
+        "VT": {
+            "status": "pending"
+        },
+        "WV": {
+            "status": "pending"
+        },
+        "WI": {
+            "status": "pending"
+        },
+        "WY": {
+            "status": "pending"
+        }
+    },
+    "summary": {
+        "total_jurisdictions": 51,
+        "completed": 22,
+        "pending": 29
+    }
+}

@@ -1,0 +1,116 @@
+{
+    "state_code": "MD",
+    "state_name": "Maryland",
+    "regulatory_body": {
+        "name": "Maryland State Police Licensing Division",
+        "abbreviation": "MSPSL",
+        "website": "https://mdsp.maryland.gov",
+        "training_commission": "Maryland Police Training and Standards Commission (MPTSC)"
+    },
+    "effective_date": "2025-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "security_guard",
+            "display_name": "Security Guard Certification",
+            "renewal_period_months": 36,
+            "initial_training_hours": 12,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "MD Security Guard",
+                "Security Guard Certification",
+                "Maryland Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "12 hours of initial security guard training (effective 1/1/2025)",
+                    "Training from MPTSC-approved provider",
+                    "FBI fingerprint background check",
+                    "Submit certificate of completion with application"
+                ],
+                "renewal": [
+                    "8 hours continuing security training (MPTSC-approved)",
+                    "Livescan/FBI fingerprints for background investigation",
+                    "Submit renewal 90+ business days before expiration",
+                    "Include training certificate with renewal application"
+                ]
+            },
+            "notes": "Current guards without 12-hour initial training must complete it for renewal"
+        },
+        {
+            "type": "special_police_officer",
+            "display_name": "Special Police Officer",
+            "renewal_period_months": 36,
+            "initial_training_hours": 80,
+            "renewal_training_hours": 12,
+            "compliance_item_descriptions": [
+                "Special Police Officer",
+                "SPO",
+                "MD SPO",
+                "Maryland SPO"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "80 hours of approved training (effective 10/1/2020)",
+                    "Criminal law instruction",
+                    "Constitutional procedural requirements (search, seizure, arrests)",
+                    "Appropriate use of force training",
+                    "Training approved by Secretary via MPCTC",
+                    "FBI fingerprint background check"
+                ],
+                "renewal": [
+                    "12 hours in-service training (MPCTC-approved)",
+                    "FBI fingerprints for background investigation",
+                    "Submit renewal 90+ business days before expiration"
+                ]
+            },
+            "fees": {
+                "renewal": 60,
+                "currency": "USD"
+            }
+        }
+    ],
+    "training_topics": {
+        "security_guard": [
+            "Basic security procedures",
+            "Legal authority and limitations",
+            "Report writing",
+            "Emergency response"
+        ],
+        "special_police": [
+            "Criminal law",
+            "Constitutional procedural requirements",
+            "Search and seizure",
+            "Arrest procedures",
+            "Use of force"
+        ]
+    },
+    "background_check": {
+        "fbi_check_required": true,
+        "fingerprinting_required": true,
+        "livescan_accepted": true
+    },
+    "important_dates": {
+        "security_guard_training_effective": "2025-01-01",
+        "spo_training_effective": "2020-10-01"
+    },
+    "contact": {
+        "website": "https://mdsp.maryland.gov/Organization/Pages/CriminalInvestigationBureau/LicensingDivision.aspx",
+        "licensing_portal": "https://egov.maryland.gov/msp/licensing"
+    },
+    "sources": [
+        {
+            "title": "Maryland State Police - Security Guard Certification",
+            "url": "https://mdsp.maryland.gov",
+            "accessed_date": "2024-12-27"
+        },
+        {
+            "title": "Maryland.gov - Security Guard Training Requirements",
+            "url": "https://maryland.gov",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

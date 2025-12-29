@@ -1,0 +1,115 @@
+{
+    "state_code": "PA",
+    "state_name": "Pennsylvania",
+    "regulatory_body": {
+        "name": "Pennsylvania State Police",
+        "abbreviation": "PSP",
+        "unit": "Lethal Weapons Certification Unit",
+        "website": "https://www.psp.pa.gov"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "security_guard_unarmed",
+            "display_name": "Security Guard (Unarmed)",
+            "renewal_period_months": 0,
+            "initial_training_hours": 40,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "PA Security Guard",
+                "Unarmed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "High school diploma or GED",
+                    "U.S. citizen or work authorization",
+                    "40 hours training (20 classroom + 20 OJT typical)",
+                    "Criminal background check with fingerprinting",
+                    "No felony convictions or disqualifying misdemeanors",
+                    "May require county court petition or company sponsorship"
+                ],
+                "renewal": [
+                    "No state-mandated renewal for unarmed guards"
+                ]
+            },
+            "notes": "Unarmed guards not mandated to register with state; requirements via employers"
+        },
+        {
+            "type": "act_235_lethal_weapons",
+            "display_name": "Act 235 Lethal Weapons Certification (Armed)",
+            "renewal_period_months": 60,
+            "initial_training_hours": 40,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Act 235 Certification",
+                "Lethal Weapons Certification",
+                "Armed Security Guard",
+                "PA Armed Guard",
+                "Act 235"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "Physical examination by PA-licensed MD",
+                    "  - Vision: 20/70 uncorrected, correctable to 20/20",
+                    "  - Normal color and depth perception",
+                    "  - No debilitating neurological/cardiovascular conditions",
+                    "Psychological examination by PA-licensed psychologist",
+                    "No disqualifying criminal offenses (18 Pa.C.S. Section 6105)",
+                    "Submit application via TACS (Training And Certification System)",
+                    "FBI fingerprint background check",
+                    "Receive approval letter from PSP before training",
+                    "40 hours basic training at Act 235 certified school",
+                    "  - 22 hours classroom (crime codes, legal authority, use of force)",
+                    "  - 4 hours armed/unarmed defense",
+                    "  - 14 hours firearms training and qualification",
+                    "Complete training within 6 months of approval letter"
+                ],
+                "renewal": [
+                    "8 hours recertification course",
+                    "Certification valid for 5 years"
+                ]
+            },
+            "fees": {
+                "application": 50,
+                "fbi_background_check": 30.25,
+                "certification": 30,
+                "currency": "USD"
+            }
+        }
+    ],
+    "training_topics": {
+        "act_235_classroom": [
+            "Crime codes",
+            "Legal authority",
+            "Use of force",
+            "Constitutional law"
+        ],
+        "act_235_practical": [
+            "Armed defense",
+            "Unarmed defense",
+            "Firearms handling",
+            "Range qualification"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fbi_check_required": true,
+        "fingerprinting_required": true,
+        "psychological_exam_required": true,
+        "physical_exam_required": true
+    },
+    "contact": {
+        "website": "https://www.psp.pa.gov/firearms-information/Pages/Lethal-Weapons.aspx"
+    },
+    "sources": [
+        {
+            "title": "PA State Police - Lethal Weapons Training Act",
+            "url": "https://www.psp.pa.gov",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

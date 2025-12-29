@@ -1,0 +1,104 @@
+{
+    "state_code": "NC",
+    "state_name": "North Carolina",
+    "regulatory_body": {
+        "name": "Private Protective Services Board",
+        "abbreviation": "PPSB",
+        "parent_agency": "NC Department of Public Safety",
+        "website": "https://www.ncdps.gov/our-organization/law-enforcement/private-protective-services-board"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "unarmed_security_guard",
+            "display_name": "Unarmed Security Guard",
+            "renewal_period_months": 0,
+            "initial_training_hours": 16,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "NC Security Guard",
+                "Unarmed Security",
+                "PPSB Registration"
+            ],
+            "requirements": {
+                "initial": [
+                    "4 hours training within 20 calendar days of placement on duty",
+                    "16 hours total training within 30 days of hire",
+                    "PPSB-certified training course",
+                    "Criminal background check with fingerprinting",
+                    "Registration through employer within 30 days"
+                ],
+                "renewal": [
+                    "No state-mandated renewal training"
+                ]
+            },
+            "training_timeline": {
+                "within_20_days": 4,
+                "within_30_days": 16
+            }
+        },
+        {
+            "type": "armed_security_guard",
+            "display_name": "Armed Security Guard",
+            "renewal_period_months": 0,
+            "initial_training_hours": 36,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Armed Security Guard",
+                "NC Armed Guard",
+                "Armed Security",
+                "Firearms Registration"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "16 hours unarmed training (prerequisite)",
+                    "20 hours PPSB Firearms Training Course",
+                    "  - Includes classroom and range time",
+                    "  - Written test",
+                    "  - Day and night firing proficiency (80% minimum)",
+                    "Certificate dated within 90 days of application",
+                    "Criminal background check"
+                ],
+                "renewal": [
+                    "No state-mandated renewal training"
+                ]
+            },
+            "notes": "CCH permit does not authorize on-duty concealed carry; separate PPSB endorsement required"
+        }
+    ],
+    "training_topics": {
+        "unarmed": [
+            "North Carolina security laws",
+            "Patrol procedures",
+            "Emergency response",
+            "Communication",
+            "Report writing",
+            "Legal use of force",
+            "Deportment and professional standards"
+        ],
+        "firearms": [
+            "Legal aspects (4 hours)",
+            "Safety (1 hour)",
+            "Handgun operation and fundamentals",
+            "Maintenance",
+            "Day and night firing qualification"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fingerprinting_required": true
+    },
+    "contact": {
+        "website": "https://www.ncdps.gov/our-organization/law-enforcement/private-protective-services-board"
+    },
+    "sources": [
+        {
+            "title": "NC DPS - Private Protective Services Board",
+            "url": "https://www.ncdps.gov/our-organization/law-enforcement/private-protective-services-board",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

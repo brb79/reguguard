@@ -1,0 +1,81 @@
+{
+    "state_code": "CT",
+    "state_name": "Connecticut",
+    "regulatory_body": {
+        "name": "Department of Emergency Services and Public Protection",
+        "abbreviation": "DESPP",
+        "unit": "Special Licensing and Firearms Unit (SLFU)",
+        "website": "https://portal.ct.gov/DESPP"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "security_officer",
+            "display_name": "Security Officer (Unarmed)",
+            "renewal_period_months": 60,
+            "initial_training_hours": 8,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Guard Card",
+                "CT Security Officer",
+                "Security Officer ID Card"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "High school diploma or equivalency",
+                    "8 hours state-approved criminal justice training",
+                    "Pass written exam (70% minimum)",
+                    "FBI background check + fingerprinting",
+                    "No felony or serious misdemeanor convictions"
+                ],
+                "renewal": [
+                    "Renew every 5 years"
+                ]
+            },
+            "fees": {
+                "application": 100,
+                "fbi_check": 13.25,
+                "state_check": 75,
+                "currency": "USD"
+            }
+        },
+        {
+            "type": "armed_security_officer",
+            "display_name": "Armed Security Officer (Blue Card)",
+            "renewal_period_months": 60,
+            "initial_training_hours": 38,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Blue Card",
+                "Armed Security",
+                "CT Armed Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "Hold unarmed Guard Card first",
+                    "Valid CT State Pistol Permit",
+                    "30 hours certified weapons training",
+                    "8-hour firearms qualification course",
+                    "Pass written exam (70%)"
+                ],
+                "renewal": [
+                    "8-hour annual review + firearm qualification",
+                    "Blue Card valid 5 years"
+                ]
+            }
+        }
+    ],
+    "contact": {
+        "website": "https://portal.ct.gov/DESPP"
+    },
+    "sources": [
+        {
+            "title": "CT DESPP",
+            "url": "https://portal.ct.gov/DESPP",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

@@ -1,0 +1,75 @@
+{
+    "state_code": "TN",
+    "state_name": "Tennessee",
+    "regulatory_body": {
+        "name": "Tennessee Department of Commerce & Insurance",
+        "abbreviation": "TDCI",
+        "division": "Private Protective Services",
+        "website": "https://www.tn.gov/commerce/regboards/private-protective.html"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "unarmed_security_guard",
+            "display_name": "Unarmed Security Guard",
+            "renewal_period_months": 24,
+            "initial_training_hours": 4,
+            "renewal_training_hours": 2,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "TN Security",
+                "Unarmed Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "U.S. citizen or resident alien",
+                    "Good moral character",
+                    "No felony convictions or disqualifying misdemeanors",
+                    "4-hour basic course (orientation, legal powers, emergency, duties)",
+                    "TBI/FBI fingerprint check"
+                ],
+                "renewal": [
+                    "2 hours refresher training",
+                    "Pass test (70%)"
+                ]
+            }
+        },
+        {
+            "type": "armed_security_guard",
+            "display_name": "Armed Security Guard",
+            "renewal_period_months": 24,
+            "initial_training_hours": 16,
+            "renewal_training_hours": 4,
+            "compliance_item_descriptions": [
+                "Armed Security",
+                "TN Armed Guard",
+                "Armed Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "4-hour basic course (same as unarmed)",
+                    "8 hours firearms classroom (legal, safety, handling)",
+                    "4 hours marksmanship (70% qualification)",
+                    "Must work unarmed first typically"
+                ],
+                "renewal": [
+                    "4 hours refresher",
+                    "Re-qualify firearm (70%)"
+                ]
+            }
+        }
+    ],
+    "contact": {
+        "website": "https://www.tn.gov/commerce/regboards/private-protective.html"
+    },
+    "sources": [
+        {
+            "title": "TN.gov Private Protective Services",
+            "url": "https://www.tn.gov",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

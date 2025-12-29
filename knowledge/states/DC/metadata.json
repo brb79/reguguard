@@ -1,0 +1,170 @@
+{
+    "state_code": "DC",
+    "state_name": "District of Columbia",
+    "regulatory_body": {
+        "name": "Security Officer Management Branch",
+        "abbreviation": "SOMB",
+        "website": "https://dcra.dc.gov",
+        "parent_agency": "Department of Consumer and Regulatory Affairs (DCRA)"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "security_guard",
+            "display_name": "Security Guard (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 40,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Security Guard",
+                "DC Security Guard",
+                "Security Officer",
+                "Unarmed Security Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "High school diploma or GED",
+                    "U.S. citizen or legal resident with valid work permit",
+                    "24 hours pre-assignment training",
+                    "16 hours on-the-job training within 90 days",
+                    "FBI background check",
+                    "Drug screening",
+                    "Physical examination from physician",
+                    "Pass SOMB certification exam (Pearson VUE)"
+                ],
+                "renewal": [
+                    "No disqualifying criminal history",
+                    "Current certification status"
+                ]
+            },
+            "training_breakdown": {
+                "pre_assignment_hours": 24,
+                "on_the_job_hours": 16,
+                "total_hours": 40
+            }
+        },
+        {
+            "type": "special_police_officer_unarmed",
+            "display_name": "Special Police Officer (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 56,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Special Police Officer",
+                "SPO",
+                "DC SPO",
+                "Unarmed SPO"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "High school diploma or GED",
+                    "U.S. citizen or legal resident",
+                    "40 hours pre-assignment training (16 hr arrest powers + 24 hr general)",
+                    "16 hours on-the-job training within 90 working days",
+                    "FBI background check",
+                    "Drug screening",
+                    "Physical examination",
+                    "Pass SOMB certification exam"
+                ],
+                "renewal": [
+                    "8 hours annual in-service training",
+                    "No disqualifying criminal history"
+                ]
+            },
+            "training_breakdown": {
+                "arrest_powers_hours": 16,
+                "general_duties_hours": 24,
+                "on_the_job_hours": 16,
+                "total_hours": 56
+            }
+        },
+        {
+            "type": "special_police_officer_armed",
+            "display_name": "Special Police Officer (Armed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 96,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Armed Special Police Officer",
+                "Armed SPO",
+                "DC Armed SPO",
+                "Armed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "High school diploma or GED",
+                    "U.S. citizen or legal resident",
+                    "40 hours pre-assignment training",
+                    "16 hours on-the-job training within 90 working days",
+                    "40 hours Firearms Certification",
+                    "Range certification/qualification",
+                    "FBI background check",
+                    "Drug screening",
+                    "Physical examination",
+                    "Pass SOMB certification exam"
+                ],
+                "renewal": [
+                    "8 hours annual in-service training",
+                    "Firearms re-qualification",
+                    "No disqualifying criminal history"
+                ]
+            },
+            "training_breakdown": {
+                "arrest_powers_hours": 16,
+                "general_duties_hours": 24,
+                "on_the_job_hours": 16,
+                "firearms_hours": 40,
+                "total_hours": 96
+            }
+        }
+    ],
+    "training_topics": {
+        "entry_level": [
+            "Basic security procedures",
+            "Legal issues",
+            "Emergency response",
+            "Customer service",
+            "Terrorism awareness",
+            "Building evacuation procedures",
+            "Unattended packages protocol",
+            "Unknown substances handling"
+        ],
+        "spo_arrest_powers": [
+            "Arrest powers",
+            "Search and seizure laws",
+            "District of Columbia Official Code",
+            "Use of force"
+        ],
+        "firearms": [
+            "Firearms safety",
+            "Range qualification",
+            "Legal use of firearms"
+        ]
+    },
+    "background_check": {
+        "fbi_check_required": true,
+        "fingerprinting_required": true,
+        "drug_screening_required": true,
+        "physical_exam_required": true
+    },
+    "contact": {
+        "phone": "(202) 442-4400",
+        "website": "https://dcra.dc.gov/service/security-officer-certification"
+    },
+    "sources": [
+        {
+            "title": "DC.gov - Security Officer Certification",
+            "url": "https://dcra.dc.gov/service/security-officer-certification",
+            "accessed_date": "2024-12-27"
+        },
+        {
+            "title": "SOMB Training Requirements",
+            "url": "https://dcra.dc.gov",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

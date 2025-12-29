@@ -1,0 +1,77 @@
+{
+    "state_code": "LA",
+    "state_name": "Louisiana",
+    "regulatory_body": {
+        "name": "Louisiana State Board of Private Security Examiners",
+        "abbreviation": "LSBPSE",
+        "website": "https://lsbpse.com"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "unarmed_security_officer",
+            "display_name": "Unarmed Security Officer",
+            "renewal_period_months": 24,
+            "initial_training_hours": 16,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Security Officer",
+                "LA Security Guard",
+                "LSBPSE Registration"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "High school diploma or GED",
+                    "FBI background check + fingerprinting",
+                    "8 hours training within 30 days of employment",
+                    "8 more hours within 60 days (16 total)",
+                    "Pass 50-question exam (70%) after each 8-hour segment",
+                    "Employed by licensed security company"
+                ],
+                "renewal": [
+                    "Renew every 2 years"
+                ]
+            }
+        },
+        {
+            "type": "armed_security_officer",
+            "display_name": "Armed Security Officer",
+            "renewal_period_months": 24,
+            "initial_training_hours": 16,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Armed Security",
+                "LA Armed Guard",
+                "Armed Officer"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "Complete all unarmed requirements",
+                    "Additional firearms training by state-licensed instructor",
+                    "Qualify with specific weapon to be carried",
+                    "Range qualification"
+                ],
+                "renewal": [
+                    "Annual firearms retraining",
+                    "80% marksmanship qualification"
+                ]
+            }
+        }
+    ],
+    "reciprocity": {
+        "out_of_state": "4-hour training + exam if comparable license"
+    },
+    "contact": {
+        "website": "https://lsbpse.com"
+    },
+    "sources": [
+        {
+            "title": "LSBPSE",
+            "url": "https://lsbpse.com",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

@@ -1,0 +1,148 @@
+{
+    "state_code": "TX",
+    "state_name": "Texas",
+    "regulatory_body": {
+        "name": "Texas Department of Public Safety",
+        "abbreviation": "DPS",
+        "division": "Private Security Bureau",
+        "website": "https://www.dps.texas.gov/section/private-security"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "level_ii_noncommissioned",
+            "display_name": "Level II Non-Commissioned (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 6,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Level II Security",
+                "Non-Commissioned Security",
+                "Unarmed Security Guard",
+                "TX Level II",
+                "Security Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "No disqualifying criminal history",
+                    "4-6 hours Level II training course",
+                    "Training covers fundamental responsibilities and legal requirements",
+                    "DPS background check"
+                ],
+                "renewal": [
+                    "No disqualifying criminal history",
+                    "Current registration status"
+                ]
+            },
+            "notes": "Training hours vary by provider (4-8 hours typical)"
+        },
+        {
+            "type": "level_iii_commissioned",
+            "display_name": "Level III Commissioned (Armed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 45,
+            "renewal_training_hours": 6,
+            "compliance_item_descriptions": [
+                "Level III Security",
+                "Commissioned Security Officer",
+                "Armed Security Guard",
+                "TX Level III",
+                "Armed Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "45 hours of approved training",
+                    "Classroom instruction with written examination",
+                    "Firearms course of fire for proficiency",
+                    "10 hours in-person firearms and defensive tactics (as of 1/1/2024)",
+                    "MMPI psychological exam (as of 1/1/2024)",
+                    "Handcuffing, holds and restraints training",
+                    "Weapon retention training",
+                    "Range qualification",
+                    "DPS background check",
+                    "No disqualifying criminal history"
+                ],
+                "renewal": [
+                    "6 hours continuing education",
+                    "Firearms re-qualification",
+                    "No disqualifying criminal history"
+                ]
+            }
+        },
+        {
+            "type": "personal_protection_officer",
+            "display_name": "Personal Protection Officer",
+            "renewal_period_months": 24,
+            "initial_training_hours": 15,
+            "renewal_training_hours": 6,
+            "compliance_item_descriptions": [
+                "Personal Protection Officer",
+                "PPO",
+                "Executive Protection",
+                "Bodyguard"
+            ],
+            "requirements": {
+                "initial": [
+                    "Must hold Level III commission",
+                    "15 hours additional PPO training",
+                    "DPS background check"
+                ],
+                "renewal": [
+                    "6 hours continuing education",
+                    "Maintain Level III commission"
+                ]
+            }
+        }
+    ],
+    "training_topics": {
+        "level_ii": [
+            "Fundamental responsibilities of security personnel",
+            "Legal requirements and authority",
+            "Report writing",
+            "Emergency procedures"
+        ],
+        "level_iii": [
+            "Firearms safety and handling",
+            "Legal use of force",
+            "Handcuffing techniques",
+            "Holds and restraints",
+            "Weapon retention",
+            "Marksmanship and range qualification"
+        ],
+        "continuing_education": [
+            "Legal updates",
+            "Use of force review",
+            "Firearms proficiency"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fbi_check_required": true,
+        "fingerprinting_required": true,
+        "psychological_exam_required_for_armed": true
+    },
+    "important_dates": {
+        "mmpi_requirement_effective": "2024-01-01",
+        "in_person_firearms_effective": "2024-01-01"
+    },
+    "contact": {
+        "phone": "(512) 424-7293",
+        "website": "https://www.dps.texas.gov/section/private-security",
+        "email": "psb@dps.texas.gov"
+    },
+    "sources": [
+        {
+            "title": "Texas DPS Private Security Bureau",
+            "url": "https://www.dps.texas.gov/section/private-security",
+            "accessed_date": "2024-12-27"
+        },
+        {
+            "title": "Texas.gov Security Officer Training",
+            "url": "https://texas.gov",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

@@ -1,0 +1,120 @@
+{
+    "state_code": "FL",
+    "state_name": "Florida",
+    "regulatory_body": {
+        "name": "Florida Department of Agriculture and Consumer Services",
+        "abbreviation": "FDACS",
+        "division": "Division of Licensing",
+        "website": "https://www.fdacs.gov/Divisions-Offices/Licensing"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-27",
+    "license_types": [
+        {
+            "type": "class_d_security_officer",
+            "display_name": "Class D Security Officer (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 40,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "Class D License",
+                "Security Officer License",
+                "FL Class D",
+                "Unarmed Security Guard",
+                "Security Guard"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "U.S. citizen or legal resident with work authorization",
+                    "40 hours of professional training from FDACS-approved school",
+                    "Pass written exam (75% on 170-question test)",
+                    "Criminal background check with fingerprinting",
+                    "Passport-style photo",
+                    "No disqualifying felonies or certain misdemeanors"
+                ],
+                "renewal": [
+                    "No disqualifying criminal history",
+                    "Renewal notice sent 95 days before expiration"
+                ]
+            },
+            "fees": {
+                "renewal": 45,
+                "currency": "USD"
+            }
+        },
+        {
+            "type": "class_g_statewide_firearm",
+            "display_name": "Class G Statewide Firearm License (Armed)",
+            "renewal_period_months": 12,
+            "initial_training_hours": 28,
+            "renewal_training_hours": 4,
+            "compliance_item_descriptions": [
+                "Class G License",
+                "Armed Security License",
+                "FL Class G",
+                "Armed Security Guard",
+                "Firearm License"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age (21 for concealed carry)",
+                    "Must hold or be in process of obtaining Class D license",
+                    "28 hours firearms training with Class K instructor",
+                    "Firearms range qualification (144 rounds)",
+                    "Written exam",
+                    "Criminal background check",
+                    "Psychological and physical exam (for temp G license)"
+                ],
+                "renewal": [
+                    "4 hours annual firearms requalification",
+                    "Training with licensed instructor",
+                    "Annual renewal required"
+                ]
+            },
+            "fees": {
+                "renewal": 112,
+                "currency": "USD"
+            },
+            "notes": "Class G requires annual renewal unlike Class D (biennial)"
+        }
+    ],
+    "training_topics": {
+        "class_d": [
+            "Legal responsibilities",
+            "Emergency response",
+            "Communication skills",
+            "Conflict resolution",
+            "Patrolling techniques",
+            "Incident reporting",
+            "Professional ethics"
+        ],
+        "class_g_firearms": [
+            "Firearm safety",
+            "Legal issues concerning use of force",
+            "Firearms mechanics",
+            "Marksmanship principles",
+            "Loading and unloading",
+            "Clearing malfunctions"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fingerprinting_required": true
+    },
+    "expiration_notes": {
+        "late_renewal_within_3_months": "Additional late fee applies",
+        "expired_3_to_12_months": "New application and fingerprints required",
+        "expired_over_1_year": "Must retake 40-hour training course"
+    },
+    "contact": {
+        "website": "https://www.fdacs.gov/Divisions-Offices/Licensing"
+    },
+    "sources": [
+        {
+            "title": "FDACS Division of Licensing",
+            "url": "https://www.fdacs.gov/Divisions-Offices/Licensing",
+            "accessed_date": "2024-12-27"
+        }
+    ]
+}

@@ -1,0 +1,111 @@
+{
+    "state_code": "AZ",
+    "state_name": "Arizona",
+    "regulatory_body": {
+        "name": "Arizona Department of Public Safety",
+        "abbreviation": "DPS",
+        "unit": "Licensing Unit",
+        "website": "https://www.azdps.gov/services/public/securityguard"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "unarmed_security_guard",
+            "display_name": "Security Guard (Unarmed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 8,
+            "renewal_training_hours": 8,
+            "compliance_item_descriptions": [
+                "Guard Card",
+                "AZ Security Guard",
+                "Unarmed Security",
+                "DPS Security License"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "U.S. citizen or legal resident",
+                    "No felony convictions or disqualifying misdemeanors",
+                    "Not a registered sex offender",
+                    "8-hour pre-assignment training (online or in-person)",
+                    "FBI/DOJ background check with fingerprinting",
+                    "Two passport photos",
+                    "Apply through registered security agency"
+                ],
+                "renewal": [
+                    "8-hour refresher training every 2 years"
+                ]
+            },
+            "fees": {
+                "registration": 50,
+                "fbi_fingerprinting": 22,
+                "total": 72,
+                "currency": "USD"
+            }
+        },
+        {
+            "type": "armed_security_guard",
+            "display_name": "Security Guard (Armed)",
+            "renewal_period_months": 24,
+            "initial_training_hours": 24,
+            "renewal_training_hours": 16,
+            "compliance_item_descriptions": [
+                "Armed Guard License",
+                "AZ Armed Security",
+                "Armed Guard",
+                "DPS Armed License"
+            ],
+            "requirements": {
+                "initial": [
+                    "Complete 8-hour unarmed training first",
+                    "16-hour armed security course (in-person only)",
+                    "Live-fire range qualification",
+                    "Written test",
+                    "FBI/DOJ background check"
+                ],
+                "renewal": [
+                    "16-hour armed refresher every 2 years",
+                    "Annual refresher training (written test + range qual)"
+                ]
+            },
+            "fees": {
+                "total": 122,
+                "online_total": 134.95,
+                "currency": "USD"
+            },
+            "notes": "Armed course cannot be taken online"
+        }
+    ],
+    "training_topics": {
+        "unarmed_8_hour": [
+            "Criminal law",
+            "Laws of arrest",
+            "Use of force",
+            "Emergency response",
+            "Ethics",
+            "Security procedures"
+        ],
+        "armed_16_hour": [
+            "Force laws",
+            "Firearm marksmanship",
+            "Legal issues",
+            "Range qualification"
+        ]
+    },
+    "background_check": {
+        "fbi_check_required": true,
+        "doj_check_required": true,
+        "fingerprinting_required": true
+    },
+    "contact": {
+        "website": "https://www.azdps.gov/services/public/securityguard"
+    },
+    "sources": [
+        {
+            "title": "Arizona DPS - Security Guard Licensing",
+            "url": "https://www.azdps.gov/services/public/securityguard",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}

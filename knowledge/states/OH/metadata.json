@@ -1,0 +1,95 @@
+{
+    "state_code": "OH",
+    "state_name": "Ohio",
+    "regulatory_body": {
+        "name": "Ohio Private Investigator Security Guard Services",
+        "abbreviation": "PISGS",
+        "parent_agency": "Ohio Homeland Security",
+        "training_commission": "Ohio Peace Officer Training Commission (OPOTC)",
+        "website": "https://homelandsecurity.ohio.gov/pisgs/"
+    },
+    "effective_date": "2024-01-01",
+    "last_verified": "2024-12-29",
+    "license_types": [
+        {
+            "type": "registered_security_guard",
+            "display_name": "Registered Security Guard (Unarmed)",
+            "renewal_period_months": 0,
+            "initial_training_hours": 0,
+            "renewal_training_hours": 0,
+            "compliance_item_descriptions": [
+                "PISGS Registration",
+                "OH Security Guard",
+                "Security Guard",
+                "Unarmed Security"
+            ],
+            "requirements": {
+                "initial": [
+                    "18 years of age or older",
+                    "U.S. citizen or resident alien",
+                    "Good moral character",
+                    "Criminal background check (Ohio BCI)",
+                    "No felony convictions or disqualifying misdemeanors",
+                    "Employer registers employee with PISGS within 7 business days",
+                    "PISGS ID card issued after background check"
+                ],
+                "renewal": [
+                    "No state-mandated renewal or training"
+                ]
+            },
+            "notes": "Ohio does NOT mandate training hours for unarmed guards; employer sets standards"
+        },
+        {
+            "type": "firearm_bearer_endorsement",
+            "display_name": "Firearm Bearer (FAB) Endorsement",
+            "renewal_period_months": 12,
+            "initial_training_hours": 20,
+            "renewal_training_hours": 4,
+            "compliance_item_descriptions": [
+                "FAB Endorsement",
+                "Armed Security Guard",
+                "OH Armed Guard",
+                "Firearm Bearer"
+            ],
+            "requirements": {
+                "initial": [
+                    "21 years of age or older",
+                    "Hold PISGS registration",
+                    "20-hour OPOTC handgun training course",
+                    "5 additional hours for shotgun (if carried)",
+                    "FBI background check",
+                    "Employer submits FAB endorsement application",
+                    "Initial certificate valid for 18 months"
+                ],
+                "renewal": [
+                    "4-hour OPOTC firearms requalification annually",
+                    "Requalification valid for 12 months"
+                ]
+            },
+            "notes": "CCW does not authorize on-duty carry; FAB endorsement required"
+        }
+    ],
+    "training_topics": {
+        "opotc_firearms": [
+            "Handgun safety",
+            "Legal use of force",
+            "Marksmanship",
+            "Firearms fundamentals"
+        ]
+    },
+    "background_check": {
+        "state_check_required": true,
+        "fbi_check_required": true,
+        "fingerprinting_required": true
+    },
+    "contact": {
+        "website": "https://homelandsecurity.ohio.gov/pisgs/"
+    },
+    "sources": [
+        {
+            "title": "Ohio Homeland Security - PISGS",
+            "url": "https://homelandsecurity.ohio.gov/pisgs/",
+            "accessed_date": "2024-12-29"
+        }
+    ]
+}
