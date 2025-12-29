@@ -2,6 +2,7 @@
 
 // Conversation status enum type
 export type ConversationStatus =
+    | 'general_inquiry'
     | 'awaiting_photo'
     | 'processing'
     | 'awaiting_confirmation'
@@ -228,7 +229,7 @@ export interface Database {
                     id: string
                     client_id: string
                     employee_id: string
-                    license_id: string
+                    license_id: string | null  // Null for general inquiry conversations
                     phone_number: string
                     status: ConversationStatus
                     message_count: number
@@ -242,7 +243,7 @@ export interface Database {
                     id?: string
                     client_id: string
                     employee_id: string
-                    license_id: string
+                    license_id?: string | null  // Null for general inquiry conversations
                     phone_number: string
                     status?: ConversationStatus
                     message_count?: number

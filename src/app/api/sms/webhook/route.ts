@@ -8,6 +8,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
 import { conversationService, messageTemplates } from '@/lib/conversations/service';
+import { smsService } from '@/lib/sms/service';
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/lib/supabase/types';
 import { withErrorHandling } from '@/lib/errors';
@@ -163,10 +164,56 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
         twilioSid: twilioBody.MessageSid,
     });
 
-    // If no active conversation, send a default response
+    // If no active conversation, check if this is a known employee
     if (!conversation) {
-        console.log(`No active conversation found for ${fromNumber}`);
-        // Return empty TwiML - don't respond to unknown numbers
+        console.log(`No active conversation found for ${fromNumber}, checking if known employee...`);
+
+        // Look up employee by phone number
+        const employee = await conversationService.findEmployeeByPhone(fromNumber);
+
+        if (employee) {
+            console.log(`Found employee: ${employee.firstName} ${employee.lastName} (${employee.id})`);
+
+            // Create a general inquiry conversation
+            const result = await conversationService.startGeneralConversation({
+                clientId: employee.clientId,
+                employeeId: employee.id,
+                phoneNumber: fromNumber,
+            });
+
+            if (result.success) {
+                console.log(`Created general conversation: ${result.conversationId}`);
+
+                // Send welcome message
+                const welcomeMessage =
+                    `👋 Hi ${employee.firstName}! I'm the ReguGuard Compliance Assistant.\n\n` +
+                    `I can help you with:\n` +
+                    `• License renewals - send a 📸 photo\n` +
+                    `• Compliance questions\n` +
+                    `• Expiration dates & requirements\n\n` +
+                    `How can I assist you today?`;
+
+                await smsService.send({
+                    to: fromNumber,
+                    body: welcomeMessage,
+                });
+
+                // Log the outbound message
+                await logMessage(supabase, {
+                    conversationId: result.conversationId,
+                    direction: 'outbound',
+                    from: twilioBody.To,
+                    to: fromNumber,
+                    body: welcomeMessage,
+                    mediaUrls: [],
+                    twilioSid: 'welcome_auto',
+                });
+            }
+        } else {
+            console.log(`Unknown phone number: ${fromNumber}`);
+        }
+
+        // Return empty TwiML - responses sent via smsService
         return new NextResponse(
             '<?xml version="1.0" encoding="UTF-8"?><Response></Response>',
             {

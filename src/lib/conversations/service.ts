@@ -169,7 +169,7 @@ class ConversationService {
             .from('sms_conversations')
             .select('*')
             .eq('phone_number', normalized)
-            .in('status', ['awaiting_photo', 'awaiting_confirmation', 'processing', 'rejected'])
+            .in('status', ['general_inquiry', 'awaiting_photo', 'awaiting_confirmation', 'processing', 'rejected'])
             .order('created_at', { ascending: false })
             .limit(1)
             .single();
@@ -178,18 +178,124 @@ class ConversationService {
     }
 
     /**
+     * Find employee by phone number (for user-initiated conversations)
+     */
+    async findEmployeeByPhone(phoneNumber: string): Promise<{
+        id: string;
+        clientId: string;
+        firstName: string;
+        lastName: string;
+    } | null> {
+        // Normalize phone number for matching
+        const normalized = this.normalizePhoneNumber(phoneNumber);
+
+        // Try to find by normalized phone, also try without +1 prefix for flexibility
+        const variants = [
+            normalized,
+            normalized.replace(/^\+1/, ''),
+            phoneNumber.replace(/\D/g, ''),
+        ];
+
+        for (const variant of variants) {
+            // Type for employee lookup
+            type EmployeeLookupResult = {
+                id: string;
+                client_id: string;
+                first_name: string;
+                last_name: string;
+                phone1: string;
+            };
+
+            const { data } = await this.supabase
+                .from('employees_cache')
+                .select('id, client_id, first_name, last_name, phone1')
+                .or(`phone1.ilike.%${variant}%`)
+                .limit(1)
+                .single() as { data: EmployeeLookupResult | null; error: unknown };
+
+            if (data) {
+                return {
+                    id: data.id,
+                    clientId: data.client_id,
+                    firstName: data.first_name,
+                    lastName: data.last_name,
+                };
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Start a general inquiry conversation (user-initiated, no specific license)
+     */
+    async startGeneralConversation(params: {
+        clientId: string;
+        employeeId: string;
+        phoneNumber: string;
+    }): Promise<{ conversationId: string; success: boolean; error?: string }> {
+        try {
+            // Check for existing active general conversation
+            const normalized = this.normalizePhoneNumber(params.phoneNumber);
+
+            type ExistingConversationResult = { id: string };
+
+            const { data: existing } = await this.supabase
+                .from('sms_conversations')
+                .select('id')
+                .eq('phone_number', normalized)
+                .eq('status', 'general_inquiry')
+                .single() as { data: ExistingConversationResult | null; error: unknown };
+
+            if (existing) {
+                return {
+                    conversationId: existing.id,
+                    success: true,
+                };
+            }
+
+            // Create new general inquiry conversation (no license_id)
+            const { data, error } = await this.supabase
+                .from('sms_conversations')
+                .insert({
+                    client_id: params.clientId,
+                    employee_id: params.employeeId,
+                    license_id: null, // No specific license for general inquiries
+                    phone_number: normalized,
+                    status: 'general_inquiry',
+                } as never)
+                .select('id')
+                .single() as { data: { id: string } | null; error: unknown };
+
+            if (error || !data) {
+                console.error('Failed to create general conversation:', error);
+                return { conversationId: '', success: false, error: String(error) };
+            }
+
+            return { conversationId: data.id, success: true };
+        } catch (error) {
+            console.error('Error starting general conversation:', error);
+            return {
+                conversationId: '',
+                success: false,
+                error: error instanceof Error ? error.message : 'Unknown error',
+            };
+        }
+    }
+
+    /**
      * Get full conversation context for processing
      */
     async getConversationContext(conversationId: string): Promise<ConversationContext | null> {
-        // Type for context query with relationships
+        // Type for context query with relationships (license is optional for general inquiries)
         type ContextQueryResult = {
             id: string;
             phone_number: string;
             employee_id: string;
-            license_id: string;
+            license_id: string | null;
             client_id: string;
             employees_cache: { first_name: string; last_name: string; winteam_employee_number: string };
-            licenses_cache: { description: string; winteam_compliance_id: string };
+            licenses_cache: { description: string; winteam_compliance_id: string } | null;
         };
 
         const { data } = await this.supabase
@@ -205,7 +311,7 @@ class ConversationService {
                     last_name,
                     winteam_employee_number
                 ),
-                licenses_cache!inner (
+                licenses_cache (
                     description,
                     winteam_compliance_id
                 )
@@ -217,9 +323,10 @@ class ConversationService {
 
         // Type-safe extraction of relationships
         const employee = extractSingle(data.employees_cache);
-        const license = extractSingle(data.licenses_cache);
+        if (!employee) return null;
 
-        if (!employee || !license) return null;
+        // License is optional for general inquiry conversations
+        const license = data.licenses_cache ? extractSingle(data.licenses_cache) : null;
 
         return {
             conversationId: data.id,
@@ -228,9 +335,9 @@ class ConversationService {
             clientId: data.client_id,
             phoneNumber: data.phone_number,
             employeeName: `${employee.first_name} ${employee.last_name}`,
-            licenseName: license.description,
+            licenseName: license?.description || null,
             winteamEmployeeNumber: parseInt(employee.winteam_employee_number, 10),
-            winteamComplianceId: parseInt(license.winteam_compliance_id, 10),
+            winteamComplianceId: license ? parseInt(license.winteam_compliance_id, 10) : null,
         };
     }
 
@@ -324,7 +431,7 @@ class ConversationService {
                     .single() as { data: EmployeeLocationResult | null; error: unknown };
 
                 const matchResult = await licenseMatchingService.matchLicense({
-                    description: context.licenseName,
+                    description: context.licenseName || '',
                     stateCode: extraction.state,
                     extractedState: extraction.state,
                     extractedLicenseType: extraction.licenseType,
@@ -729,7 +836,7 @@ class ConversationService {
                     await smsService.send({
                         to: context.phoneNumber,
                         body: messageTemplates.requestPhoto({
-                            licenseName: context.licenseName,
+                            licenseName: context.licenseName || 'your license',
                             expirationDate: 'soon',
                         }),
                     });
@@ -801,6 +908,11 @@ class ConversationService {
 
             updates.notes = `Updated via ReguGuard SMS on ${new Date().toISOString().split('T')[0]}`;
 
+            // Can only sync if we have the WinTeam IDs
+            if (context.winteamComplianceId === null) {
+                return { success: false, error: 'No license associated with this conversation' };
+            }
+
             // Call WinTeam API
             const result = await winTeamClient.updateComplianceItem(
                 context.winteamEmployeeNumber,
@@ -846,10 +958,12 @@ class ConversationService {
                     updateData.matched_at = new Date().toISOString();
                 }
 
-                await this.supabase
-                    .from('licenses_cache')
-                    .update(updateData as never)
-                    .eq('id', context.licenseId);
+                if (context.licenseId) {
+                    await this.supabase
+                        .from('licenses_cache')
+                        .update(updateData as never)
+                        .eq('id', context.licenseId);
+                }
             }
 
             return {

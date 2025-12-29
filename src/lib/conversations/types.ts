@@ -8,13 +8,13 @@ import type { ConversationMessage } from '../ai/nlp-service';
 export interface ConversationContext {
     conversationId: string;
     employeeId: string;
-    licenseId: string;
+    licenseId: string | null;  // Null for general inquiry conversations
     clientId: string;
     phoneNumber: string;
     employeeName: string;
-    licenseName: string;
+    licenseName: string | null;  // Null for general inquiry conversations
     winteamEmployeeNumber: number;
-    winteamComplianceId: number;
+    winteamComplianceId: number | null;  // Null for general inquiry conversations
 }
 
 export interface ProcessPhotoResult {
@@ -40,6 +40,7 @@ export interface ConversationStateTransition {
 
 // Valid state transitions
 export const VALID_TRANSITIONS: Record<ConversationStatus, ConversationStatus[]> = {
+    'general_inquiry': ['awaiting_photo', 'expired', 'failed'],  // Can transition to photo flow
     'awaiting_photo': ['processing', 'expired', 'failed'],
     'processing': ['awaiting_confirmation', 'rejected', 'failed'],
     'awaiting_confirmation': ['confirmed', 'rejected', 'expired', 'failed'],

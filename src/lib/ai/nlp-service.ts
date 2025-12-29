@@ -205,7 +205,7 @@ class NLPService {
             // Build classification prompt
             const classificationPrompt = INTENT_CLASSIFICATION_PROMPT
                 .replace('{status}', currentStatus)
-                .replace('{licenseName}', context.licenseName)
+                .replace('{licenseName}', context.licenseName || 'General Inquiry')
                 .replace('{employeeName}', context.employeeName)
                 .replace('{history}', historyText || 'No previous messages')
                 .replace('{message}', message);
@@ -218,7 +218,7 @@ class NLPService {
             // Generate contextual response
             const responsePrompt = RESPONSE_GENERATION_PROMPT
                 .replace('{employeeName}', context.employeeName)
-                .replace('{licenseName}', context.licenseName)
+                .replace('{licenseName}', context.licenseName || 'General Inquiry')
                 .replace('{status}', currentStatus)
                 .replace('{intent}', classification.intent.intent)
                 .replace('{sentiment}', classification.sentiment?.sentiment || 'neutral')
@@ -258,7 +258,7 @@ class NLPService {
             const historyText = this.formatHistory(conversationHistory);
             const prompt = INTENT_CLASSIFICATION_PROMPT
                 .replace('{status}', currentStatus)
-                .replace('{licenseName}', context.licenseName)
+                .replace('{licenseName}', context.licenseName || 'General Inquiry')
                 .replace('{employeeName}', context.employeeName)
                 .replace('{history}', historyText || 'No previous messages')
                 .replace('{message}', message);
@@ -337,7 +337,7 @@ Message: "${message}"`;
             const historyText = this.formatHistory(conversationHistory);
             let prompt = RESPONSE_GENERATION_PROMPT
                 .replace('{employeeName}', context.employeeName)
-                .replace('{licenseName}', context.licenseName)
+                .replace('{licenseName}', context.licenseName || 'General Inquiry')
                 .replace('{status}', currentStatus)
                 .replace('{intent}', intent.intent)
                 .replace('{sentiment}', 'neutral')
