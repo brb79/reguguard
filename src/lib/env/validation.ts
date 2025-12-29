@@ -12,22 +12,23 @@ const envSchema = z.object({
   // Supabase
   NEXT_PUBLIC_SUPABASE_URL: z.string().url('NEXT_PUBLIC_SUPABASE_URL must be a valid URL'),
   NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1, 'NEXT_PUBLIC_SUPABASE_ANON_KEY is required'),
-  
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY is required').optional(),
+
   // Twilio (optional for development)
   TWILIO_ACCOUNT_SID: z.string().optional(),
   TWILIO_AUTH_TOKEN: z.string().optional(),
   TWILIO_PHONE_NUMBER: z.string().optional(),
-  
+
   // Google Gemini (optional for development)
   GOOGLE_AI_API_KEY: z.string().optional(),
-  
+
   // WinTeam (optional - can be per-client)
   WINTEAM_API_URL: z.string().url().optional().or(z.literal('')),
   WINTEAM_TENANT_ID: z.string().optional(),
-  
+
   // App URL (optional for development)
   NEXT_PUBLIC_APP_URL: z.string().url().optional().or(z.literal('')),
-  
+
   // Node environment
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
 });
@@ -50,6 +51,7 @@ export function getEnv(): Env {
   const rawEnv = {
     NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
     NEXT_PUBLIC_SUPABASE_ANON_KEY: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
     TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
     TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
@@ -63,10 +65,10 @@ export function getEnv(): Env {
   const result = envSchema.safeParse(rawEnv);
 
   if (!result.success) {
-    const errors = result.error.errors.map((err) => 
+    const errors = result.error.errors.map((err) =>
       `  - ${err.path.join('.')}: ${err.message}`
     ).join('\n');
-    
+
     throw new Error(
       `❌ Invalid environment variables:\n${errors}\n\n` +
       `Please check your .env file or environment configuration.`
@@ -85,22 +87,22 @@ export const envChecks = {
     const env = getEnv();
     return !!env.NEXT_PUBLIC_SUPABASE_URL && !!env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   },
-  
+
   isTwilioConfigured: () => {
     const env = getEnv();
     return !!env.TWILIO_ACCOUNT_SID && !!env.TWILIO_AUTH_TOKEN && !!env.TWILIO_PHONE_NUMBER;
   },
-  
+
   isVisionConfigured: () => {
     const env = getEnv();
     return !!env.GOOGLE_AI_API_KEY;
   },
-  
+
   isWinTeamConfigured: () => {
     const env = getEnv();
     return !!env.WINTEAM_API_URL && !!env.WINTEAM_TENANT_ID;
   },
-  
+
   isProduction: () => {
     const env = getEnv();
     return env.NODE_ENV === 'production';

@@ -6,6 +6,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
+import { createAdminClient } from '../supabase/admin';
 import { Database, ConversationStatus, SmsConversation, PendingRenewal } from '../supabase/types';
 import { visionService } from '../vision/service';
 import { getWinTeamClient } from '../winteam/client';
@@ -75,21 +76,15 @@ class ConversationService {
 
     constructor() {
         try {
+            this.supabase = createAdminClient();
+        } catch (error) {
+            console.error('Failed to initialize Supabase admin client:', error);
+            // Fallback for development if service role key is missing
             const env = getEnv();
             this.supabase = createClient<Database>(
                 env.NEXT_PUBLIC_SUPABASE_URL,
                 env.NEXT_PUBLIC_SUPABASE_ANON_KEY
             );
-        } catch (error) {
-            // Fallback to process.env if validation fails (for development)
-            const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-            const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-            if (!supabaseUrl || !supabaseKey) {
-                throw new Error('Supabase environment variables not configured');
-            }
-
-            this.supabase = createClient<Database>(supabaseUrl, supabaseKey);
         }
     }
 

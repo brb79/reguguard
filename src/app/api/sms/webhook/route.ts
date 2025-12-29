@@ -9,8 +9,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import twilio from 'twilio';
 import { conversationService, messageTemplates } from '@/lib/conversations/service';
 import { smsService } from '@/lib/sms/service';
-import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/lib/supabase/types';
+import { createAdminClient } from '@/lib/supabase/admin';
 import { withErrorHandling } from '@/lib/errors';
 import { rateLimiters } from '@/lib/ratelimit';
 import { getEnv } from '@/lib/env';
@@ -66,7 +66,7 @@ function validateTwilioSignature(
  * Log incoming message to database
  */
 async function logMessage(
-    supabase: ReturnType<typeof createClient<Database>>,
+    supabase: ReturnType<typeof createAdminClient>,
     params: {
         conversationId: string | null;
         direction: 'inbound' | 'outbound';
@@ -127,11 +127,8 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
         }
     }
 
-    // Initialize Supabase client
-    const supabase = createClient<Database>(
-        env.NEXT_PUBLIC_SUPABASE_URL,
-        env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    );
+    // Initialize Supabase admin client
+    const supabase = createAdminClient();
 
     // Extract message details
     const fromNumber = twilioBody.From;
