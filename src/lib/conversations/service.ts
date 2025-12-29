@@ -108,6 +108,9 @@ class ConversationService {
         alertId?: string;
     }): Promise<{ conversationId: string; success: boolean; error?: string }> {
         try {
+            // Type for existing conversation query
+            type ExistingConversationResult = { id: string };
+
             // Check for existing active conversation
             const { data: existing } = await this.supabase
                 .from('sms_conversations')
@@ -115,7 +118,7 @@ class ConversationService {
                 .eq('employee_id', params.employeeId)
                 .eq('license_id', params.licenseId)
                 .in('status', ['awaiting_photo', 'awaiting_confirmation', 'processing', 'rejected'])
-                .single();
+                .single() as { data: ExistingConversationResult | null; error: unknown };
 
             if (existing) {
                 return {
@@ -135,13 +138,13 @@ class ConversationService {
                     phone_number: params.phoneNumber,
                     alert_id: params.alertId,
                     status: 'awaiting_photo' as ConversationStatus,
-                })
+                } as never)
                 .select('id')
-                .single();
+                .single() as { data: { id: string } | null; error: unknown };
 
             if (error || !data) {
                 console.error('Failed to create conversation:', error);
-                return { conversationId: '', success: false, error: error?.message };
+                return { conversationId: '', success: false, error: String(error) };
             }
 
             return { conversationId: data.id, success: true };
@@ -178,6 +181,17 @@ class ConversationService {
      * Get full conversation context for processing
      */
     async getConversationContext(conversationId: string): Promise<ConversationContext | null> {
+        // Type for context query with relationships
+        type ContextQueryResult = {
+            id: string;
+            phone_number: string;
+            employee_id: string;
+            license_id: string;
+            client_id: string;
+            employees_cache: { first_name: string; last_name: string; winteam_employee_number: string };
+            licenses_cache: { description: string; winteam_compliance_id: string };
+        };
+
         const { data } = await this.supabase
             .from('sms_conversations')
             .select(`
@@ -197,7 +211,7 @@ class ConversationService {
                 )
             `)
             .eq('id', conversationId)
-            .single();
+            .single() as { data: ContextQueryResult | null; error: unknown };
 
         if (!data) return null;
 
@@ -215,8 +229,8 @@ class ConversationService {
             phoneNumber: data.phone_number,
             employeeName: `${employee.first_name} ${employee.last_name}`,
             licenseName: license.description,
-            winteamEmployeeNumber: employee.winteam_employee_number,
-            winteamComplianceId: license.winteam_compliance_id,
+            winteamEmployeeNumber: parseInt(employee.winteam_employee_number, 10),
+            winteamComplianceId: parseInt(license.winteam_compliance_id, 10),
         };
     }
 
@@ -224,12 +238,15 @@ class ConversationService {
      * Get conversation history from message log
      */
     async getConversationHistory(conversationId: string, limit: number = 10): Promise<ConversationMessage[]> {
+        // Type for message log query
+        type MessageLogResult = { direction: string; body: string | null; created_at: string };
+
         const { data } = await this.supabase
             .from('sms_message_log')
             .select('direction, body, created_at')
             .eq('conversation_id', conversationId)
             .order('created_at', { ascending: true })
-            .limit(limit);
+            .limit(limit) as { data: MessageLogResult[] | null; error: unknown };
 
         if (!data) return [];
 
@@ -296,12 +313,15 @@ class ConversationService {
 
         if (licenseMatchingService.isConfigured()) {
             try {
+                // Type for employee location query
+                type EmployeeLocationResult = { location_id: number | null };
+
                 // Get employee location for context
                 const { data: employee } = await this.supabase
                     .from('employees_cache')
                     .select('location_id')
                     .eq('id', context.employeeId)
-                    .single();
+                    .single() as { data: EmployeeLocationResult | null; error: unknown };
 
                 const matchResult = await licenseMatchingService.matchLicense({
                     description: context.licenseName,
@@ -344,8 +364,8 @@ class ConversationService {
                 extracted_state: matchedState || extraction.state,
                 extracted_holder_name: extraction.holderName,
                 extraction_confidence: extraction.confidence,
-                raw_extraction_response: extraction.rawResponse as object,
-            });
+                raw_extraction_response: extraction.rawResponse as unknown,
+            } as never);
 
         if (insertError) {
             console.error('Failed to store pending renewal:', insertError);
@@ -387,11 +407,11 @@ class ConversationService {
         if (!confirmed) {
             // User wants to retry - go back to awaiting photo
             await this.updateConversationStatus(conversationId, 'rejected');
-            
+
             // Get conversation history for context-aware response
             const history = await this.getConversationHistory(conversationId);
             let response = `ReguGuard: No problem! Please send a new photo of your license.`;
-            
+
             // Use AI to generate empathetic response if available
             if (nlpService.isConfigured()) {
                 try {
@@ -408,13 +428,22 @@ class ConversationService {
                     console.error('Error generating AI response:', error);
                 }
             }
-            
+
             await smsService.send({
                 to: context.phoneNumber,
                 body: response,
             });
             return { success: true };
         }
+
+        // Type for pending renewal query
+        type PendingRenewalResult = {
+            id: string;
+            extracted_expiration_date: string | null;
+            extracted_license_number: string | null;
+            extracted_license_type: string | null;
+            extracted_state: string | null;
+        };
 
         // Get the pending renewal
         const { data: renewal } = await this.supabase
@@ -424,7 +453,7 @@ class ConversationService {
             .eq('confirmed', false)
             .order('created_at', { ascending: false })
             .limit(1)
-            .single();
+            .single() as { data: PendingRenewalResult | null; error: unknown };
 
         if (!renewal) {
             return { success: false, error: 'No pending renewal found' };
@@ -436,7 +465,7 @@ class ConversationService {
             .update({
                 confirmed: true,
                 confirmed_at: new Date().toISOString(),
-            })
+            } as never)
             .eq('id', renewal.id);
 
         // Update conversation status
@@ -447,11 +476,11 @@ class ConversationService {
 
         if (syncResult.success) {
             await this.updateConversationStatus(conversationId, 'completed');
-            
+
             // Get conversation history for personalized success message
             const history = await this.getConversationHistory(conversationId);
             let successMessage = messageTemplates.updateSuccess();
-            
+
             // Use AI to generate personalized success message if available
             if (nlpService.isConfigured()) {
                 try {
@@ -469,18 +498,18 @@ class ConversationService {
                     console.error('Error generating AI success message:', error);
                 }
             }
-            
+
             await smsService.send({
                 to: context.phoneNumber,
                 body: successMessage,
             });
         } else {
             await this.updateConversationStatus(conversationId, 'failed');
-            
+
             // Get conversation history for empathetic error message
             const history = await this.getConversationHistory(conversationId);
             let errorMessage = messageTemplates.syncFailed();
-            
+
             // Use AI to generate empathetic error message if available
             if (nlpService.isConfigured()) {
                 try {
@@ -498,7 +527,7 @@ class ConversationService {
                     console.error('Error generating AI error message:', error);
                 }
             }
-            
+
             await smsService.send({
                 to: context.phoneNumber,
                 body: errorMessage,
@@ -520,12 +549,15 @@ class ConversationService {
             return { handled: false };
         }
 
+        // Type for status query
+        type ConversationStatusResult = { status: string };
+
         // Get current conversation status
         const { data: conversation } = await this.supabase
             .from('sms_conversations')
             .select('status')
             .eq('id', conversationId)
-            .single();
+            .single() as { data: ConversationStatusResult | null; error: unknown };
 
         const currentStatus = conversation?.status || 'awaiting_photo';
 
@@ -570,7 +602,7 @@ class ConversationService {
                         case 'cancel':
                             // Cancel conversation
                             await this.updateConversationStatus(conversationId, 'expired');
-                            const cancelResponse = analysis.response || 
+                            const cancelResponse = analysis.response ||
                                 `ReguGuard: Your renewal request has been cancelled. Contact your supervisor if you need assistance.`;
                             await smsService.send({
                                 to: context.phoneNumber,
@@ -581,7 +613,7 @@ class ConversationService {
                         case 'retry':
                             // Request new photo
                             await this.updateConversationStatus(conversationId, 'rejected');
-                            const retryResponse = analysis.response || 
+                            const retryResponse = analysis.response ||
                                 `ReguGuard: No problem! Please send a new photo of your license.`;
                             await smsService.send({
                                 to: context.phoneNumber,
@@ -591,7 +623,7 @@ class ConversationService {
 
                         case 'question':
                             // Answer question with AI-generated response
-                            const questionResponse = analysis.response || 
+                            const questionResponse = analysis.response ||
                                 await nlpService.generateResponse(
                                     analysis.intent,
                                     context,
@@ -608,7 +640,7 @@ class ConversationService {
                         case 'frustration':
                         case 'urgency':
                             // Acknowledge frustration/urgency with empathetic response
-                            const empatheticResponse = analysis.response || 
+                            const empatheticResponse = analysis.response ||
                                 `ReguGuard: I understand this is important. Let me help you get this resolved quickly. ` +
                                 `Please send a photo of your license, or reply HELP for assistance.`;
                             await smsService.send({
@@ -619,7 +651,7 @@ class ConversationService {
 
                         case 'greeting':
                             // Friendly greeting response
-                            const greetingResponse = analysis.response || 
+                            const greetingResponse = analysis.response ||
                                 `Hi! I'm here to help with your ${context.licenseName} renewal. ` +
                                 `Please send a photo of your renewed license.`;
                             await smsService.send({
@@ -725,12 +757,20 @@ class ConversationService {
      */
     private async syncToWinTeam(renewalId: string, context: ConversationContext): Promise<SyncResult> {
         try {
+            // Type for renewal in syncToWinTeam
+            type SyncRenewalResult = {
+                extracted_expiration_date: string | null;
+                extracted_license_number: string | null;
+                extracted_license_type: string | null;
+                extracted_state: string | null;
+            };
+
             // Get the renewal data
             const { data: renewal } = await this.supabase
                 .from('pending_renewals')
                 .select('*')
                 .eq('id', renewalId)
-                .single();
+                .single() as { data: SyncRenewalResult | null; error: unknown };
 
             if (!renewal) {
                 return { success: false, error: 'Renewal not found' };
@@ -775,7 +815,7 @@ class ConversationService {
                     synced_to_winteam: result.success,
                     synced_at: new Date().toISOString(),
                     sync_error: result.error || null,
-                })
+                } as never)
                 .eq('id', renewalId);
 
             // Also update our local license cache with matched license type
@@ -808,7 +848,7 @@ class ConversationService {
 
                 await this.supabase
                     .from('licenses_cache')
-                    .update(updateData)
+                    .update(updateData as never)
                     .eq('id', context.licenseId);
             }
 
@@ -836,11 +876,14 @@ class ConversationService {
         conversationId: string,
         newStatus: ConversationStatus
     ): Promise<boolean> {
+        // Type for status query
+        type StatusQueryResult = { status: string };
+
         const { data: current } = await this.supabase
             .from('sms_conversations')
             .select('status')
             .eq('id', conversationId)
-            .single();
+            .single() as { data: StatusQueryResult | null; error: unknown };
 
         if (!current) return false;
 
@@ -857,7 +900,7 @@ class ConversationService {
             .update({
                 status: newStatus,
                 last_message_at: new Date().toISOString(),
-            })
+            } as never)
             .eq('id', conversationId);
 
         return !error;
@@ -867,12 +910,15 @@ class ConversationService {
      * Expire stale conversations (called by cron)
      */
     async expireStaleConversations(): Promise<number> {
+        // Type for expire result
+        type ExpireResult = { id: string };
+
         const { data, error } = await this.supabase
             .from('sms_conversations')
-            .update({ status: 'expired' as ConversationStatus })
+            .update({ status: 'expired' as ConversationStatus } as never)
             .in('status', ['awaiting_photo', 'awaiting_confirmation', 'rejected'])
             .lt('expires_at', new Date().toISOString())
-            .select('id');
+            .select('id') as { data: ExpireResult[] | null; error: unknown };
 
         if (error) {
             console.error('Error expiring conversations:', error);

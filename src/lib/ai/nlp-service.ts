@@ -160,7 +160,7 @@ class NLPService {
             if (apiKey) {
                 this.genAI = new GoogleGenerativeAI(apiKey);
                 // Use gemini-1.5-pro for better understanding, fallback to flash
-                this.model = this.genAI.getGenerativeModel({ 
+                this.model = this.genAI.getGenerativeModel({
                     model: 'gemini-1.5-pro',
                     // Use flash for faster responses if needed
                     // model: 'gemini-1.5-flash',
@@ -171,7 +171,7 @@ class NLPService {
             const apiKey = process.env.GOOGLE_AI_API_KEY;
             if (apiKey) {
                 this.genAI = new GoogleGenerativeAI(apiKey);
-                this.model = this.genAI.getGenerativeModel({ 
+                this.model = this.genAI.getGenerativeModel({
                     model: 'gemini-1.5-pro',
                 });
             }
@@ -221,7 +221,7 @@ class NLPService {
                 .replace('{licenseName}', context.licenseName)
                 .replace('{status}', currentStatus)
                 .replace('{intent}', classification.intent.intent)
-                .replace('{sentiment}', classification.intent.sentiment?.sentiment || 'neutral')
+                .replace('{sentiment}', classification.sentiment?.sentiment || 'neutral')
                 .replace('{history}', historyText || 'No previous messages')
                 .replace('{message}', message);
 

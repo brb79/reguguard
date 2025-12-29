@@ -305,6 +305,26 @@ class AlertPersonalizationService {
         try {
             const supabase = await createServerClient();
 
+            // Types for queries
+            type AlertHistoryResult = {
+                alert_type: string;
+                status: string;
+                sent_at: string | null;
+                acknowledged_at: string | null;
+                created_at: string;
+            };
+
+            type ConversationHistoryResult = {
+                status: string;
+                created_at: string | null;
+                completed_at: string | null;
+            };
+
+            type LicenseHistoryResult = {
+                expiration_date: string | null;
+                last_synced: string | null;
+            };
+
             // Get past alerts for this employee/license
             const { data: pastAlerts } = await supabase
                 .from('alerts')
@@ -312,7 +332,7 @@ class AlertPersonalizationService {
                 .eq('employee_id', employeeId)
                 .eq('license_id', licenseId)
                 .order('created_at', { ascending: false })
-                .limit(20);
+                .limit(20) as { data: AlertHistoryResult[] | null; error: unknown };
 
             // Get past renewals (completed conversations)
             const { data: pastConversations } = await supabase
@@ -322,7 +342,7 @@ class AlertPersonalizationService {
                 .eq('license_id', licenseId)
                 .in('status', ['completed', 'expired', 'failed'])
                 .order('created_at', { ascending: false })
-                .limit(10);
+                .limit(10) as { data: ConversationHistoryResult[] | null; error: unknown };
 
             // Get license history to calculate renewal timing
             const { data: licenseHistory } = await supabase
@@ -330,7 +350,7 @@ class AlertPersonalizationService {
                 .select('expiration_date, last_synced')
                 .eq('employee_id', employeeId)
                 .order('last_synced', { ascending: false })
-                .limit(5);
+                .limit(5) as { data: LicenseHistoryResult[] | null; error: unknown };
 
             // Calculate metrics
             const totalAlerts = pastAlerts?.length || 0;
@@ -343,7 +363,7 @@ class AlertPersonalizationService {
                 for (const alert of pastAlerts) {
                     if (alert.sent_at) {
                         const matchingRenewal = pastConversations.find(
-                            c => c.created_at && new Date(c.created_at) > new Date(alert.sent_at)
+                            c => c.created_at && new Date(c.created_at) > new Date(alert.sent_at!)
                         );
                         if (matchingRenewal?.completed_at) {
                             const days = Math.floor(

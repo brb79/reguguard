@@ -27,7 +27,7 @@ export class StateRequirementsMonitoringService {
         const { stateCode, monitoringType = 'scheduled', updateMetadata = true } = options;
 
         // Get list of states to monitor
-        const statesToMonitor = stateCode 
+        const statesToMonitor = stateCode
             ? [stateCode.toUpperCase()]
             : await this.getAllStatesWithMetadata();
 
@@ -61,6 +61,9 @@ export class StateRequirementsMonitoringService {
     ): Promise<MonitoringResult> {
         const supabase = await createServerClient();
 
+        // Type for monitoring record
+        type MonitoringRecordResult = { id: string };
+
         // Create monitoring record
         const { data: monitoringRecord, error: monitoringError } = await supabase
             .from('state_requirements_monitoring')
@@ -68,12 +71,12 @@ export class StateRequirementsMonitoringService {
                 state_code: stateCode,
                 status: 'running',
                 monitoring_type: monitoringType,
-            })
+            } as never)
             .select()
-            .single();
+            .single() as { data: MonitoringRecordResult | null; error: unknown };
 
         if (monitoringError || !monitoringRecord) {
-            throw new Error(`Failed to create monitoring record: ${monitoringError?.message}`);
+            throw new Error(`Failed to create monitoring record: ${String(monitoringError)}`);
         }
 
         try {
@@ -92,7 +95,7 @@ export class StateRequirementsMonitoringService {
             // Scrape websites
             const scrapingResults = await stateRequirementsScraper.scrapeUrls(sources);
             const successfulScrapes = scrapingResults.filter(r => r.success);
-            
+
             if (successfulScrapes.length === 0) {
                 throw new Error('Failed to scrape any sources');
             }
@@ -127,8 +130,8 @@ export class StateRequirementsMonitoringService {
                 .from('state_requirements_monitoring')
                 .update({
                     sources_checked: successfulScrapes.map(r => r.url),
-                    metadata_snapshot: existingMetadata as any,
-                })
+                    metadata_snapshot: existingMetadata as unknown,
+                } as never)
                 .eq('id', monitoringRecord.id);
 
             let status: MonitoringResult['status'] = 'no_changes';
@@ -159,7 +162,7 @@ export class StateRequirementsMonitoringService {
 
                 await supabase
                     .from('state_requirements_changes')
-                    .insert(changeInserts);
+                    .insert(changeInserts as never);
 
                 // Save impact report
                 const { data: reportRecord } = await supabase
@@ -169,14 +172,14 @@ export class StateRequirementsMonitoringService {
                         monitoring_id: monitoringRecord.id,
                         report_type: impactReport.breaking_changes.length > 0 ? 'breaking_changes' : 'change_summary',
                         summary: impactReport.summary,
-                        breaking_changes: impactReport.breaking_changes as any,
-                        non_breaking_changes: impactReport.non_breaking_changes as any,
+                        breaking_changes: impactReport.breaking_changes as unknown,
+                        non_breaking_changes: impactReport.non_breaking_changes as unknown,
                         affected_license_types: impactReport.affected_license_types,
                         estimated_impact: impactReport.estimated_impact,
                         recommendations: impactReport.recommendations,
-                    })
+                    } as never)
                     .select()
-                    .single();
+                    .single() as { data: { id: string } | null; error: unknown };
 
                 impactReportId = reportRecord?.id || null;
 
@@ -199,9 +202,9 @@ export class StateRequirementsMonitoringService {
                 .update({
                     status,
                     completed_at: new Date().toISOString(),
-                    changes_detected: changes.length > 0 ? changes as any : null,
+                    changes_detected: changes.length > 0 ? changes as unknown : null,
                     impact_report_id: impactReportId,
-                })
+                } as never)
                 .eq('id', monitoringRecord.id);
 
             return {
@@ -220,7 +223,7 @@ export class StateRequirementsMonitoringService {
                     status: 'failed',
                     completed_at: new Date().toISOString(),
                     error_message: error instanceof Error ? error.message : 'Unknown error',
-                })
+                } as never)
                 .eq('id', monitoringRecord.id);
 
             throw error;
@@ -238,7 +241,7 @@ export class StateRequirementsMonitoringService {
             const indexPath = join(process.cwd(), 'knowledge', 'states', 'index.json');
             const indexContent = await readFile(indexPath, 'utf-8');
             const index = JSON.parse(indexContent);
-            
+
             // Extract states with "complete" status
             const states: string[] = [];
             if (index.states) {
@@ -250,7 +253,7 @@ export class StateRequirementsMonitoringService {
                     }
                 }
             }
-            
+
             return states.length > 0 ? states : this.getDefaultStates();
         } catch {
             // Fallback to hardcoded list if index.json doesn't exist or can't be read
@@ -272,7 +275,7 @@ export class StateRequirementsMonitoringService {
      */
     async getMonitoringHistory(stateCode: string, limit: number = 10) {
         const supabase = await createServerClient();
-        
+
         const { data, error } = await supabase
             .from('state_requirements_monitoring')
             .select('*')
@@ -292,7 +295,7 @@ export class StateRequirementsMonitoringService {
      */
     async getLatestChanges(stateCode: string, limit: number = 20) {
         const supabase = await createServerClient();
-        
+
         const { data, error } = await supabase
             .from('state_requirements_changes')
             .select('*')
@@ -312,7 +315,7 @@ export class StateRequirementsMonitoringService {
      */
     async getImpactReports(stateCode: string, limit: number = 10) {
         const supabase = await createServerClient();
-        
+
         const { data, error } = await supabase
             .from('compliance_impact_reports')
             .select('*')
