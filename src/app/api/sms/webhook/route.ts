@@ -178,36 +178,47 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
                 phoneNumber: fromNumber,
             });
 
-            if (result.success) {
+            if (result.success && result.conversationId) {
                 console.log(`Created general conversation: ${result.conversationId}`);
 
-                // Send welcome message
-                const welcomeMessage =
-                    `👋 Hi ${employee.firstName}! I'm the ReguGuard Compliance Assistant.\n\n` +
-                    `I can help you with:\n` +
-                    `• License renewals - send a 📸 photo\n` +
-                    `• Compliance questions\n` +
-                    `• Expiration dates & requirements\n\n` +
-                    `How can I assist you today?`;
+                // Process the user's original message instead of sending a generic welcome
+                if (messageBody) {
+                    await conversationService.handleTextCommand(result.conversationId, messageBody);
+                } else {
+                    // Only send welcome if they didn't include a message
+                    const welcomeMessage =
+                        `👋 Hi ${employee.firstName}! I'm the ReguGuard Compliance Assistant.\n\n` +
+                        `I can help you with:\n` +
+                        `• License renewals - send a 📸 photo\n` +
+                        `• Compliance questions\n` +
+                        `• Expiration dates & requirements\n\n` +
+                        `How can I assist you today?`;
 
-                await smsService.send({
-                    to: fromNumber,
-                    body: welcomeMessage,
-                });
+                    await smsService.send({
+                        to: fromNumber,
+                        body: welcomeMessage,
+                    });
 
-                // Log the outbound message
-                await logMessage(supabase, {
-                    conversationId: result.conversationId,
-                    direction: 'outbound',
-                    from: twilioBody.To,
-                    to: fromNumber,
-                    body: welcomeMessage,
-                    mediaUrls: [],
-                    twilioSid: 'welcome_auto',
-                });
+                    // Log the outbound message
+                    await logMessage(supabase, {
+                        conversationId: result.conversationId,
+                        direction: 'outbound',
+                        from: twilioBody.To,
+                        to: fromNumber,
+                        body: welcomeMessage,
+                        mediaUrls: [],
+                        twilioSid: 'welcome_auto',
+                    });
+                }
             }
         } else {
             console.log(`Unknown phone number: ${fromNumber}`);
+
+            // Send a response even for unknown numbers
+            await smsService.send({
+                to: fromNumber,
+                body: `ReguGuard: We don't have your phone number in our system. Please contact your supervisor to update your contact information.`,
+            });
         }
 
         // Return empty TwiML - responses sent via smsService
