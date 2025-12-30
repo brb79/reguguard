@@ -865,7 +865,27 @@ ${licenseId ? `License ID: ${licenseId}` : ''}
     ];
 
     const completedSteps: string[] = [];
-    let currentStep = 'initializing';
+    let currentStep: string = 'initializing';
+    const stepFromToolName = (toolName: string): string => {
+      switch (toolName) {
+        case 'checkLicenseStatus':
+          return 'Checking license status';
+        case 'identifyStateRequirements':
+          return 'Identifying state requirements';
+        case 'requestDocuments':
+          return 'Requesting required documents';
+        case 'validateDocument':
+          return 'Validating submitted documents';
+        case 'submitApplication':
+          return 'Submitting renewal application';
+        case 'trackApplicationStatus':
+          return 'Tracking application status';
+        case 'scheduleReminder':
+          return 'Scheduling reminder';
+        default:
+          return `Executing ${toolName}`;
+      }
+    };
     let maxIterations = 20; // Prevent infinite loops
     let iteration = 0;
 
@@ -873,6 +893,7 @@ ${licenseId ? `License ID: ${licenseId}` : ''}
     while (iteration < maxIterations) {
       iteration++;
 
+      currentStep = 'Determining next action';
       const result = await gemini15Pro.generate({
         messages,
         tools: [
@@ -890,6 +911,7 @@ ${licenseId ? `License ID: ${licenseId}` : ''}
         },
       });
 
+      currentStep = 'Processing agent response';
       // Add agent's response to conversation
       messages.push({
         role: 'assistant' as const,
@@ -900,6 +922,7 @@ ${licenseId ? `License ID: ${licenseId}` : ''}
       if (result.toolCalls && result.toolCalls.length > 0) {
         // Execute tool calls and add results to conversation
         for (const toolCall of result.toolCalls) {
+          currentStep = stepFromToolName(toolCall.name);
           const toolResult = await executeToolCall(toolCall);
 
           // Track completed steps
@@ -915,15 +938,17 @@ ${licenseId ? `License ID: ${licenseId}` : ''}
         }
 
         // Continue agent loop to process tool results
+        currentStep = 'Processing tool results';
         continue;
       }
 
       // Check if agent thinks workflow is complete
       if (isWorkflowComplete(result.text)) {
+        currentStep = 'Renewal completed';
         return {
           sessionId,
           status: 'completed',
-          currentStep: 'Renewal completed',
+          currentStep,
           completedSteps,
           nextActions: [],
           summary: result.text,
@@ -932,6 +957,7 @@ ${licenseId ? `License ID: ${licenseId}` : ''}
 
       // Check if agent needs human intervention
       if (needsHumanEscalation(result.text)) {
+        currentStep = `${currentStep} (blocked - needs human review)`;
         return {
           sessionId,
           status: 'needs_human',
@@ -943,6 +969,7 @@ ${licenseId ? `License ID: ${licenseId}` : ''}
       }
 
       // If no tool calls and not complete, ask agent to continue
+      currentStep = 'Awaiting next step';
       messages.push({
         role: 'user' as const,
         content: 'Please continue with the next step.',
@@ -950,6 +977,7 @@ ${licenseId ? `License ID: ${licenseId}` : ''}
     }
 
     // Max iterations reached - escalate to human
+    currentStep = 'Max iterations reached (needs human review)';
     return {
       sessionId,
       status: 'needs_human',
