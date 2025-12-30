@@ -371,6 +371,377 @@ This plan outlines 12 AI enhancement opportunities organized by impact and imple
 
 ---
 
+### **TIER 4: Google Agent Development Kit (ADK/Genkit) Features** 🚀 **FUTURE - REQUIRES ADK MIGRATION**
+
+> **Note**: These features require migrating from direct Gemini SDK to Google's Agent Development Kit (Genkit).
+> ADK provides multi-step agent orchestration, tool calling, state management, and observability.
+> **When to migrate**: When implementing ≥2 features from this tier, the complexity justifies ADK adoption.
+
+#### 13. **Multi-Step Autonomous Renewal Agent** ⭐⭐⭐ **ADK REQUIRED**
+**Enhancement**: Agent that autonomously orchestrates entire renewal workflows from start to finish
+
+**Capabilities**:
+- **Autonomous Planning**: Agent creates step-by-step renewal plan based on employee's situation
+- **Multi-step Execution**: Executes complex workflows (check status → request documents → validate → submit → track)
+- **Tool Orchestration**: Calls multiple APIs/tools autonomously (DMV portals, payment processors, document validators)
+- **State Management**: Maintains context across days/weeks of async interactions
+- **Error Recovery**: Handles failures gracefully (bad photo → request new one, payment failed → retry with alternative)
+- **Dynamic Decision Making**: Chooses optimal path based on real-time conditions
+
+**Use Cases**:
+- User: "Help me renew my armed guard license"
+  - Agent: Checks current status → Identifies state requirements → Requests missing documents → Validates uploads → Submits application → Schedules follow-ups
+- User sends blurry photo
+  - Agent: Detects quality issue → Requests clearer photo with specific guidance → Re-validates when received
+
+**Why ADK is Required**:
+- Current SDK: Requires manual orchestration of each step in application code
+- With ADK: Agent autonomously plans and executes multi-step workflows
+- Built-in tool calling framework for external system integration
+- Native state persistence across long-running conversations
+- Automatic error recovery and retry logic
+
+**Implementation**:
+```typescript
+// Using Genkit
+const renewalAgent = defineAgent({
+  name: 'renewal-orchestrator',
+  model: 'gemini-1.5-pro',
+  tools: [
+    checkLicenseStatus,
+    identifyStateRequirements,
+    requestDocuments,
+    validateDocument,
+    submitApplication,
+    trackApplicationStatus,
+    scheduleReminder
+  ],
+  systemPrompt: 'You are a renewal assistance agent...'
+});
+```
+
+**Impact**:
+- Reduces manual intervention by 80%
+- Improves completion rates
+- Handles complex edge cases autonomously
+- Better user experience with proactive guidance
+
+**Effort**: 4-6 weeks (includes ADK migration)
+**Priority**: ⭐⭐⭐ HIGH (when ready for ADK migration)
+
+---
+
+#### 14. **Proactive Compliance Monitor Agent** ⭐⭐⭐ **ADK REQUIRED**
+**Enhancement**: Autonomous agent that continuously monitors compliance and takes preventive action
+
+**Capabilities**:
+- **Continuous Monitoring**: Runs daily scans across all employees and licenses
+- **Risk Assessment**: Analyzes patterns and predicts compliance risks
+- **Autonomous Intervention**: Decides intervention strategy per employee without human input
+- **Multi-channel Outreach**: Chooses optimal communication method (SMS, email, escalation)
+- **Adaptive Strategy**: Learns from response patterns and adjusts approach
+- **Escalation Management**: Knows when to escalate to supervisor vs. continue automated follow-up
+
+**Use Cases**:
+- Agent detects employee's license expires in 30 days + employee has history of late renewals
+  - Agent: Analyzes risk → Sends early alert → Monitors response → Escalates to supervisor if no response in 3 days
+- Agent notices pattern of employees in specific state missing prerequisite training
+  - Agent: Identifies training provider → Sends group notification → Tracks enrollment → Reports compliance trend
+
+**Why ADK is Required**:
+- Multi-step decision making (scan → analyze → decide → act → follow-up)
+- Tool calling for data gathering and action execution
+- State management for tracking interventions over time
+- Built-in observability to track agent decisions and effectiveness
+
+**Implementation**:
+```typescript
+const complianceAgent = defineAgent({
+  name: 'compliance-monitor',
+  tools: [
+    scanExpiringSoon,
+    analyzeEmployeeHistory,
+    predictRiskLevel,
+    sendPersonalizedAlert,
+    trackResponse,
+    escalateToSupervisor,
+    generateComplianceReport
+  ]
+});
+
+// Scheduled daily
+schedule.daily(async () => {
+  const result = await complianceAgent.run({
+    task: 'Monitor compliance and take preventive action'
+  });
+});
+```
+
+**Impact**:
+- Prevents 90% of license lapses through early intervention
+- Reduces supervisor workload
+- Enables true proactive compliance management
+- Scalable to thousands of employees
+
+**Effort**: 5-6 weeks
+**Priority**: ⭐⭐⭐ HIGH
+
+---
+
+#### 15. **Interactive Document Processing Agent** ⭐⭐ **ADK REQUIRED**
+**Enhancement**: Agent that intelligently processes documents with interactive validation and clarification
+
+**Capabilities**:
+- **Multi-turn Document Analysis**: Analyzes documents across multiple messages
+- **Anomaly Detection with Follow-up**: Detects issues and asks targeted clarifying questions
+- **Cross-reference Validation**: Compares data across multiple sources (license photo, renewal receipt, database)
+- **Intelligent Repair**: Guides user to fix specific issues with targeted instructions
+- **Context Preservation**: Remembers entire document history for comprehensive validation
+
+**Use Cases**:
+- User sends license photo with suspicious expiration date
+  - Agent: Extracts data → Detects anomaly (expires in 1 year, but state requires 2-year renewals) → Asks: "Your license shows expiration 2025, but you renewed in 2024. Can you send your renewal receipt?" → Validates receipt → Updates with corrected date
+- User sends partially obscured document
+  - Agent: Extracts visible data → Identifies missing fields → Requests: "I can't read the license number. Can you send a closer photo of the top-right corner?" → Combines data from both photos
+
+**Why ADK is Required**:
+- Multi-turn conversation with state persistence
+- Dynamic tool selection based on detected anomalies
+- Conditional logic flows (if X detected, then ask Y, validate with Z)
+- Context awareness across document processing session
+
+**Implementation**:
+```typescript
+const documentAgent = defineAgent({
+  name: 'document-processor',
+  tools: [
+    extractLicenseData,
+    detectAnomalies,
+    crossReferenceDatabase,
+    requestClarification,
+    validateReceipt,
+    updateEmployeeRecord
+  ]
+});
+```
+
+**Impact**:
+- Reduces document processing errors by 70%
+- Catches fraudulent/invalid documents
+- Improves data quality
+- Reduces back-and-forth by asking targeted questions
+
+**Effort**: 4-5 weeks
+**Priority**: ⭐⭐ MEDIUM-HIGH
+
+---
+
+#### 16. **Compliance Q&A Agent with Tool Use** ⭐⭐⭐ **ADK REQUIRED**
+**Enhancement**: Upgrade existing Q&A service to full agent with tool calling capabilities
+
+**Current Limitation**:
+- `compliance-qa-service.ts` provides static answers based on state metadata
+- Cannot look up real-time data or take actions
+- Single-turn interaction
+
+**With ADK**:
+```typescript
+const qaAgent = defineAgent({
+  name: 'compliance-qa',
+  tools: [
+    searchStateRegulations,
+    checkEmployeeRecord,
+    calculateRenewalCost,
+    findTrainingProviders,
+    checkAvailability,
+    bookTrainingSession,
+    generateChecklist,
+    submitSupportTicket
+  ]
+});
+```
+
+**Capabilities**:
+- **Real-time Data Lookup**: Searches current regulations, fees, and provider availability
+- **Personalized Calculations**: Computes exact costs based on employee's specific situation
+- **Action Execution**: Books training, creates tickets, generates checklists
+- **Multi-step Assistance**: Answers complex questions requiring multiple data sources
+- **Proactive Suggestions**: Recommends next steps based on employee context
+
+**Use Cases**:
+- User: "How much will my renewal cost and where can I get training?"
+  - Agent: Checks user's state and license type → Looks up current renewal fees → Searches nearby training providers → Calculates total cost → Shows 3 provider options with dates/prices → Offers to book training → Generates renewal checklist
+- User: "Why was my license rejected?"
+  - Agent: Checks submission history → Reviews rejection reason → Searches state requirements → Identifies specific issue → Provides fix instructions → Creates support ticket if needed
+
+**Why ADK is Required**:
+- Tool calling for real-time data and actions
+- Multi-step reasoning to combine information from multiple sources
+- State management for booking workflows
+- Structured output handling
+
+**Impact**:
+- Reduces support tickets by 60%
+- Enables self-service for complex questions
+- Improves user satisfaction
+- Actionable guidance instead of just information
+
+**Effort**: 3-4 weeks
+**Priority**: ⭐⭐⭐ HIGH
+
+---
+
+#### 17. **Supervisor Escalation & Resolution Agent** ⭐⭐ **ADK REQUIRED**
+**Enhancement**: AI copilot for supervisors handling complex employee issues
+
+**Capabilities**:
+- **Issue Analysis**: Analyzes complex employee issues by gathering context from multiple sources
+- **Historical Context**: Searches similar past cases and resolutions
+- **Resolution Recommendations**: Suggests multiple resolution paths with pros/cons
+- **Draft Generation**: Creates employee communication drafts
+- **Multi-system Updates**: Coordinates updates across multiple systems
+- **Follow-up Automation**: Schedules and tracks follow-up actions
+
+**Use Cases**:
+- Supervisor: "John Doe says his license renewal was rejected but he submitted everything"
+  - Agent: Pulls John's full history → Retrieves submission records → Checks state portal status → Finds 3 similar cases and their resolutions → Suggests resolution: "License photo was missing signature field. Recommend requesting new photo with instructions" → Drafts SMS to John → Updates case tracker
+- Supervisor: "We have 15 employees with expired training certificates in Texas"
+  - Agent: Analyzes affected employees → Identifies approved training providers → Checks bulk booking availability → Recommends: "Book group session at XYZ Training on [date] for $X savings" → Drafts group notification → Creates calendar holds
+
+**Why ADK is Required**:
+- Complex multi-step workflows (gather data → analyze → recommend → draft → execute)
+- Tool orchestration across multiple systems (database, state portal, messaging)
+- Conditional logic based on analysis results
+- Observability to track supervisor productivity gains
+
+**Implementation**:
+```typescript
+const supervisorAgent = defineAgent({
+  name: 'supervisor-assistant',
+  tools: [
+    getEmployeeHistory,
+    searchSimilarCases,
+    checkStatePortalStatus,
+    analyzeDiscrepancy,
+    generateResolutionOptions,
+    draftResponse,
+    updateMultipleSystems,
+    scheduleFollowUp
+  ]
+});
+```
+
+**Impact**:
+- Reduces supervisor case resolution time by 50%
+- Improves consistency in issue handling
+- Captures institutional knowledge in agent reasoning
+- Enables junior supervisors to handle complex cases
+
+**Effort**: 4-5 weeks
+**Priority**: ⭐⭐ MEDIUM
+
+---
+
+#### 18. **Predictive Renewal Workflow Agent** ⭐⭐ **ADK REQUIRED**
+**Enhancement**: Combines Tier 2's Predictive Analytics with autonomous action
+
+**Capabilities**:
+- **Behavior Analysis**: Analyzes employee renewal patterns and response behaviors
+- **Predictive Modeling**: Predicts renewal likelihood and optimal intervention timing
+- **Adaptive Strategy**: Personalizes outreach strategy per employee (some respond to morning SMS, others to evening calls)
+- **A/B Testing**: Continuously tests and refines intervention strategies
+- **Autonomous Adjustment**: Adjusts approach based on real-time response patterns
+- **Effectiveness Tracking**: Monitors and reports on intervention success rates
+
+**Use Cases**:
+- Agent detects employee "Sarah" historically responds to SMS sent on Thursdays at 10am
+  - Agent: Schedules alerts for Thursdays 10am → Monitors response → If no response, escalates to supervisor on Monday
+- Agent notices employees in specific location respond better to Spanish messages
+  - Agent: Switches to Spanish for new alerts in that location → Tracks effectiveness → Reports improvement
+
+**Why ADK is Required**:
+- Multi-step workflow (analyze → predict → personalize → send → track → adjust)
+- Tool calling for data analysis and intervention execution
+- Built-in evaluation framework for A/B testing
+- State management for tracking experiments over time
+- Observability for measuring effectiveness
+
+**Implementation**:
+```typescript
+const predictiveAgent = defineAgent({
+  name: 'renewal-predictor',
+  tools: [
+    analyzeEmployeeBehavior,
+    predictRenewalLikelihood,
+    optimizeAlertTiming,
+    personalizeOutreachStrategy,
+    sendPersonalizedAlert,
+    trackResponse,
+    adjustStrategy,
+    reportEffectiveness
+  ]
+});
+```
+
+**Impact**:
+- Increases renewal completion rate by 40%
+- Reduces alert fatigue through optimized timing
+- Enables truly personalized compliance management
+- Provides data-driven insights on what works
+
+**Effort**: 5-6 weeks
+**Priority**: ⭐⭐ MEDIUM-HIGH
+
+---
+
+### **ADK Migration Strategy**
+
+#### **When to Migrate to ADK/Genkit**
+
+Migrate when implementing **≥2 features** from Tier 4, or when you need:
+
+✅ **Multi-step autonomous workflows** (agent plans the sequence)
+✅ **Tool/API calling** (agent decides which tools to use)
+✅ **Long-running conversations** (state persistence across days/weeks)
+✅ **Complex decision making** (conditional logic with multiple paths)
+✅ **Error recovery and retries** (agent handles failures autonomously)
+✅ **Observability & evaluation** (track agent decisions and effectiveness)
+
+#### **Migration Benefits vs. Current SDK**
+
+| Current (Direct Gemini SDK) | With Google ADK (Genkit) |
+|------------------------------|---------------------------|
+| Single-purpose function calls | Multi-step autonomous agents |
+| Manual tool orchestration in code | Agents decide which tools to use |
+| Stateless interactions | Long-running stateful workflows |
+| Hard-coded workflows | Dynamic planning based on context |
+| Basic logging | Built-in tracing, evaluation, metrics |
+| No tool calling | Native function/API calling |
+| Developer manages retries/errors | Agent handles error recovery |
+| Separate A/B testing logic | Built-in evaluation framework |
+
+#### **Migration Path**
+
+**Phase 1: Pilot Migration** (2-3 weeks)
+- Migrate one existing service to ADK (recommended: Compliance Q&A Agent)
+- Learn ADK patterns and best practices
+- Establish observability and monitoring
+- Validate performance and cost
+
+**Phase 2: Core Agent Development** (4-6 weeks)
+- Implement Multi-Step Autonomous Renewal Agent
+- Build tool library for common operations
+- Establish agent evaluation framework
+- Deploy to staging and test
+
+**Phase 3: Expansion** (ongoing)
+- Roll out remaining Tier 4 agents
+- Refine based on production learnings
+- Optimize costs and performance
+- Scale to production volume
+
+---
+
 ## 🚀 Implementation Roadmap
 
 ### **Phase 1: Foundation (Weeks 1-6)** ✅ **COMPLETED**
@@ -627,7 +998,7 @@ This plan outlines 12 AI enhancement opportunities organized by impact and imple
 ### ⚠️ Partially Implemented
 5. ⚠️ **Anomaly Detection** - Basic detection exists in compliance validation, but not a dedicated service
 
-### ❌ Not Yet Implemented
+### ❌ Not Yet Implemented (Direct SDK Features - Tiers 2-3)
 6. ❌ **Predictive Renewal Analytics** - ML models for renewal prediction
 7. ❌ **Intelligent Document Processing** - Extended beyond license photos
 8. ❌ **Natural Language Dashboard Queries** - Plain English query interface
@@ -636,16 +1007,25 @@ This plan outlines 12 AI enhancement opportunities organized by impact and imple
 11. ❌ **Automated Compliance Reporting** - AI-generated comprehensive reports
 12. ❌ **Multi-Modal License Validation** - Cross-reference validation with state databases
 
+### 🚀 Future Implementation (ADK/Genkit Features - Tier 4)
+13. 🔮 **Multi-Step Autonomous Renewal Agent** - Requires ADK migration
+14. 🔮 **Proactive Compliance Monitor Agent** - Requires ADK migration
+15. 🔮 **Interactive Document Processing Agent** - Requires ADK migration
+16. 🔮 **Compliance Q&A Agent with Tool Use** - Requires ADK migration
+17. 🔮 **Supervisor Escalation & Resolution Agent** - Requires ADK migration
+18. 🔮 **Predictive Renewal Workflow Agent** - Requires ADK migration
+
 ### 📊 Implementation Progress
-- **Phase 1**: 100% Complete (3/3 features)
-- **Phase 2**: 50% Complete (1/2 features fully done, 1 partially done)
-- **Phase 3**: 0% Complete (0/3 features)
-- **Overall**: ~42% Complete (4.5/12 features)
+- **Tier 1 (Foundation)**: 100% Complete (3/3 features)
+- **Tier 2 (Intelligence)**: 33% Complete (1/3 features fully done, 1 partially done)
+- **Tier 3 (Advanced)**: 0% Complete (0/6 features)
+- **Tier 4 (ADK-Enabled)**: 0% Complete (0/6 features) - Requires ADK migration
+- **Overall**: ~25% Complete (4.5/18 features)
 
 ---
 
-**Document Version**: 2.0  
-**Last Updated**: 2025-01-27  
-**Author**: AI Expansion Planning  
-**Status**: Updated with implementation progress
+**Document Version**: 3.0
+**Last Updated**: 2025-12-30
+**Author**: AI Expansion Planning
+**Status**: Updated with ADK/Genkit migration strategy and Tier 4 features
 
