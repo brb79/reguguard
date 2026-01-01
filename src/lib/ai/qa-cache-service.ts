@@ -82,14 +82,20 @@ class QACacheService {
         try {
             const fingerprint = this.generateCacheKey(question, stateCode, licenseType);
 
-            const { data, error } = await this.supabase
+            let query = this.supabase
                 .from('compliance_qa_cache')
                 .select('answer, sources, confidence, hit_count, created_at, expires_at')
                 .eq('question_fingerprint', fingerprint)
                 .eq('state_code', stateCode.toUpperCase())
-                .eq('license_type', licenseType || null)
-                .gt('expires_at', new Date().toISOString())
-                .single();
+                .gt('expires_at', new Date().toISOString());
+
+            if (licenseType) {
+                query = query.eq('license_type', licenseType);
+            } else {
+                query = query.is('license_type', null);
+            }
+
+            const { data, error } = await query.single();
 
             if (error || !data) {
                 return null;
@@ -178,15 +184,22 @@ class QACacheService {
             });
         } catch (error) {
             // Fallback to manual increment if RPC doesn't exist
-            const { error: updateError } = await this.supabase
+            let updateQuery = this.supabase
                 .from('compliance_qa_cache')
                 .update({
                     hit_count: this.supabase.from('compliance_qa_cache').select('hit_count').single().then(r => (r.data?.hit_count || 0) + 1),
                     last_accessed_at: new Date().toISOString(),
                 })
                 .eq('question_fingerprint', fingerprint)
-                .eq('state_code', stateCode.toUpperCase())
-                .eq('license_type', licenseType || null);
+                .eq('state_code', stateCode.toUpperCase());
+
+            if (licenseType) {
+                updateQuery = updateQuery.eq('license_type', licenseType);
+            } else {
+                updateQuery = updateQuery.is('license_type', null);
+            }
+
+            const { error: updateError } = await updateQuery;
 
             if (updateError) {
                 console.error('[QACache] Error recording hit:', updateError);
