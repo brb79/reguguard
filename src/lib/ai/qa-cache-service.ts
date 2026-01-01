@@ -107,11 +107,12 @@ class QACacheService {
             );
 
             return {
-                answer: data.answer,
-                sources: Array.isArray(data.sources) ? data.sources : [],
-                confidence: data.confidence,
-                hitCount: data.hit_count,
-                createdAt: new Date(data.created_at),
+                const typedData = data as any;
+                answer: typedData.answer,
+                sources: Array.isArray(typedData.sources) ? data.sources : [],
+                confidence: typedData.confidence,
+                hitCount: typedData.hit_count,
+                createdAt: new Date(typedData.created_at),
             };
         } catch (error) {
             console.error('[QACache] Error getting cached response:', error);
