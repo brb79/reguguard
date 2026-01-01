@@ -106,8 +106,8 @@ class QACacheService {
                 console.error('[QACache] Failed to record hit:', err)
             );
 
-            return {
                 const typedData = data as any;
+            return {
                 answer: typedData.answer,
                 sources: Array.isArray(typedData.sources) ? data.sources : [],
                 confidence: typedData.confidence,
