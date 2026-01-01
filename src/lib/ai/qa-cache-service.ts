@@ -109,7 +109,7 @@ class QACacheService {
                 const typedData = data as any;
             return {
                 answer: typedData.answer,
-                sources: Array.isArray(typedData.sources) ? data.sources : [],
+                sources: Array.isArray(typedData.sources) ? typedData.sources : [],
                 confidence: typedData.confidence,
                 hitCount: typedData.hit_count,
                 createdAt: new Date(typedData.created_at),
