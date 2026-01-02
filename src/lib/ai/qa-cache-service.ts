@@ -35,7 +35,7 @@ class QACacheService {
     private supabase = createAdminClient();
     private static instance: QACacheService;
 
-    private constructor() {}
+    private constructor() { }
 
     /**
      * Get singleton instance
@@ -102,7 +102,7 @@ class QACacheService {
             }
 
             // Increment hit counter asynchronously (don't await)
-            this.recordHit(fingerprint, stateCode, licenseType).catch(err =>
+            this.recordHit(fingerprint, stateCode, licenseType).catch((err: any) =>
                 console.error('[QACache] Failed to record hit:', err)
             );
 
@@ -114,8 +114,7 @@ class QACacheService {
                 hitCount: typedData.hit_count,
                 createdAt: new Date(typedData.created_at),
             };
-            };
-        } catch (error) {
+        } catch (error: any) {
             console.error('[QACache] Error getting cached response:', error);
             return null;
         }
@@ -165,7 +164,7 @@ class QACacheService {
             if (error) {
                 console.error('[QACache] Error caching response:', error);
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('[QACache] Error in set():', error);
         }
     }
@@ -184,9 +183,9 @@ class QACacheService {
                 p_state_code: stateCode.toUpperCase(),
                 p_license_type: licenseType || null,
             });
-        } catch (error) {
+        } catch (error: any) {
             // Fallback to manual increment if RPC doesn't exist
-            let updateQuery = this.supabase
+            let updateQuery = (this.supabase as any)
                 .from('compliance_qa_cache')
                 .update({
                     last_accessed_at: new Date().toISOString(),
@@ -226,7 +225,7 @@ class QACacheService {
             }
 
             return data?.length || 0;
-        } catch (error) {
+        } catch (error: any) {
             console.error('[QACache] Error in cleanup():', error);
             return 0;
         }
@@ -263,7 +262,7 @@ class QACacheService {
                 totalCached,
                 avgConfidence: Math.round(avgConfidence * 100) / 100,
             };
-        } catch (error) {
+        } catch (error: any) {
             console.error('[QACache] Error getting stats:', error);
             return { hitRate: 0, totalCached: 0, avgConfidence: 0 };
         }
