@@ -191,66 +191,79 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
                         firstName: employee.firstName,
                     });
 
-                    await smsService.send({
+                    const confirmResult = await smsService.send({
                         to: fromNumber,
                         body: confirmationMessage,
                     });
 
-                    // Log the outbound message
-                    await logMessage(supabase, {
-                        conversationId: result.conversationId,
-                        direction: 'outbound',
-                        from: twilioBody.To,
-                        to: fromNumber,
-                        body: confirmationMessage,
-                        mediaUrls: [],
-                        twilioSid: 'opt_in_confirmation',
-                    });
+                    if (confirmResult.success) {
+                        // Log the outbound message
+                        await logMessage(supabase, {
+                            conversationId: result.conversationId,
+                            direction: 'outbound',
+                            from: twilioBody.To,
+                            to: fromNumber,
+                            body: confirmationMessage,
+                            mediaUrls: [],
+                            twilioSid: confirmResult.messageSid || 'opt_in_confirmation',
+                        });
+                    } else {
+                        console.error(`Failed to send opt-in confirmation to ${employee.firstName}: ${confirmResult.error}`);
+                    }
                 }
             } else {
+                // Send opt-in request (don't create conversation yet)
                 // Send opt-in request (don't create conversation yet)
                 const optInMessage = messageTemplates.initialOptInRequest({
                     firstName: employee.firstName,
                 });
 
-                await smsService.send({
+                const smsResult = await smsService.send({
                     to: fromNumber,
                     body: optInMessage,
                 });
 
-                // Log the outbound message (no conversation ID yet)
-                await logMessage(supabase, {
-                    conversationId: null,
-                    direction: 'outbound',
-                    from: twilioBody.To,
-                    to: fromNumber,
-                    body: optInMessage,
-                    mediaUrls: [],
-                    twilioSid: 'opt_in_request',
-                });
+                if (smsResult.success) {
+                    // Log the outbound message (no conversation ID yet)
+                    await logMessage(supabase, {
+                        conversationId: null,
+                        direction: 'outbound',
+                        from: twilioBody.To,
+                        to: fromNumber,
+                        body: optInMessage,
+                        mediaUrls: [],
+                        twilioSid: smsResult.messageSid || 'opt_in_request',
+                    });
 
-                console.log(`Sent opt-in request to ${employee.firstName} ${employee.lastName}`);
+                    console.log(`Sent opt-in request to ${employee.firstName} ${employee.lastName}`);
+                } else {
+                    console.error(`Failed to send opt-in request to ${employee.firstName} ${employee.lastName}: ${smsResult.error}`);
+                }
             }
         } else {
             console.log(`Unknown phone number: ${fromNumber}`);
 
             // Send unknown employee message
             const unknownMessage = messageTemplates.unknownEmployee();
-            await smsService.send({
+            const unknownResult = await smsService.send({
                 to: fromNumber,
                 body: unknownMessage,
             });
 
-            // Log the outbound message (no conversation ID)
-            await logMessage(supabase, {
-                conversationId: null,
-                direction: 'outbound',
-                from: twilioBody.To,
-                to: fromNumber,
-                body: unknownMessage,
-                mediaUrls: [],
-                twilioSid: 'unknown_employee',
-            });
+            if (unknownResult.success) {
+                // Log the outbound message (no conversation ID)
+                await logMessage(supabase, {
+                    conversationId: null,
+                    direction: 'outbound',
+                    from: twilioBody.To,
+                    to: fromNumber,
+                    body: unknownMessage,
+                    mediaUrls: [],
+                    twilioSid: unknownResult.messageSid || 'unknown_employee',
+                });
+            } else {
+                console.error(`Failed to send unknown employee message to ${fromNumber}: ${unknownResult.error}`);
+            }
         }
 
         // Return empty TwiML - responses sent via smsService
