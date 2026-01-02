@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Consent Flow | ReguGuard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #fff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        h1 {
+            color: #1e3a8a;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            font-weight: 700;
+        }
+        
+        h2 {
+            color: #1e3a8a;
+            font-size: 1.8em;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .brand-info {
+            background: #f8fafc;
+            border-left: 4px solid #1e3a8a;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .brand-info p {
+            margin: 8px 0;
+        }
+        
+        .brand-info strong {
+            color: #1e3a8a;
+        }
+        
+        .opt-in-process {
+            margin-bottom: 30px;
+        }
+        
+        .opt-in-process p {
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e5e7eb;
+            vertical-align: top;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9fafb;
+        }
+        
+        tr:hover {
+            background: #f3f4f6;
+        }
+        
+        .step-number {
+            font-weight: 600;
+            color: #1e3a8a;
+            font-size: 1.1em;
+        }
+        
+        .compliance-analysis {
+            font-style: italic;
+            color: #4b5563;
+        }
+        
+        .message-examples {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .message-examples h3 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        
+        .message-box {
+            background: white;
+            border-left: 4px solid #1e3a8a;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        .key-features {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .key-features h3 {
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        
+        .key-features ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .key-features li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .key-features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #1e3a8a;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SMS Opt-In and Consent Flow for ReguGuard</h1>
+        
+        <div class="brand-info">
+            <p><strong>Brand Name:</strong> ReguGuard (SecTek)</p>
+            <p><strong>Purpose:</strong> Compliance notifications, license expiration reminders, renewal deadlines, and compliance status updates for security guard employees</p>
+            <p><strong>Message Frequency:</strong> Transactional - sent when license expiration dates approach, renewal deadlines are near, or compliance status changes</p>
+            <p><strong>Messaging Numbers:</strong> [To be configured after A2P 10DLC registration]</p>
+        </div>
+        
+        <div class="opt-in-process">
+            <h2>Opt-In Process</h2>
+            <p>Our opt-in process is <strong>100% employee-initiated</strong>. We do not send any messages to an employee until they have texted our number first.</p>
+            <p>Explicit consent for ongoing, recurring compliance notification messages is captured via a keyword (<strong>START</strong> or <strong>JOIN</strong>) confirmation, as detailed in the flow below.</p>
+        </div>
+        
+        <h2>Employee-Initiated Opt-In Flow</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Step</th>
+                    <th>Sender</th>
+                    <th>Message Content / Action</th>
+                    <th>Compliance Analysis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="step-number">1</td>
+                    <td>Employee</td>
+                    <td>Employee texts ReguGuard number (e.g., "Hello" or "START")</td>
+                    <td class="compliance-analysis">The user initiated the contact, providing implicit consent for the initial response. This establishes a communication channel.</td>
+                </tr>
+                <tr>
+                    <td class="step-number">2</td>
+                    <td>ReguGuard</td>
+                    <td>"Welcome to ReguGuard! We help you stay compliant with license requirements. You'll receive alerts about license expirations, renewal deadlines, and compliance updates. Reply START to opt in, or STOP to opt out."</td>
+                    <td class="compliance-analysis">Provides clear disclosure of message purpose, frequency, and opt-out mechanism. No consent assumed - explicit opt-in required.</td>
+                </tr>
+                <tr>
+                    <td class="step-number">3</td>
+                    <td>Employee</td>
+                    <td>Employee replies "START" or "JOIN"</td>
+                    <td class="compliance-analysis">Explicit, affirmative consent captured via keyword. Employee has clear understanding of what they're consenting to.</td>
+                </tr>
+                <tr>
+                    <td class="step-number">4</td>
+                    <td>ReguGuard</td>
+                    <td>"Thank you! You're now enrolled in ReguGuard compliance notifications. You'll receive alerts about your security guard license status. Reply STOP anytime to opt out. Reply HELP for assistance."</td>
+                    <td class="compliance-analysis">Confirmation message that reinforces opt-out mechanism and provides support contact.</td>
+                </tr>
+                <tr>
+                    <td class="step-number">5</td>
+                    <td>ReguGuard</td>
+                    <td>[Ongoing compliance notifications]</td>
+                    <td class="compliance-analysis">All subsequent messages are sent under explicit consent obtained in Step 3. Each message includes opt-out instructions.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2>Alternative: Onboarding-Initiated Flow</h2>
+        <p>If employees are informed during onboarding documentation about the SMS service:</p>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Step</th>
+                    <th>Sender</th>
+                    <th>Message Content / Action</th>
+                    <th>Compliance Analysis</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="step-number">1</td>
+                    <td>HR/Onboarding</td>
+                    <td>Employee completes onboarding form that mentions: "You can opt in to receive compliance notifications via SMS by texting [number] with START"</td>
+                    <td class="compliance-analysis">Employee is informed about SMS service during onboarding, but no consent is assumed.</td>
+                </tr>
+                <tr>
+                    <td class="step-number">2</td>
+                    <td>Employee</td>
+                    <td>Employee texts ReguGuard number with "START"</td>
+                    <td class="compliance-analysis">Employee initiates contact after being informed during onboarding. Explicit consent via keyword.</td>
+                </tr>
+                <tr>
+                    <td class="step-number">3</td>
+                    <td>ReguGuard</td>
+                    <td>"Welcome to ReguGuard! You'll receive alerts about license expirations, renewal deadlines, and compliance updates. Reply STOP anytime to opt out."</td>
+                    <td class="compliance-analysis">Confirmation with clear disclosure and opt-out mechanism.</td>
+                </tr>
+                <tr>
+                    <td class="step-number">4</td>
+                    <td>ReguGuard</td>
+                    <td>[Ongoing compliance notifications]</td>
+                    <td class="compliance-analysis">All messages sent under explicit consent.</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="key-features">
+            <h3>Key Compliance Features</h3>
+            <ul>
+                <li><strong>100% User-Initiated:</strong> No unsolicited messages sent</li>
+                <li><strong>Explicit Consent:</strong> Keyword-based opt-in (START/JOIN)</li>
+                <li><strong>Clear Disclosure:</strong> Purpose, frequency, and opt-out mechanism explained upfront</li>
+                <li><strong>Persistent Opt-Out:</strong> Every message includes "Reply STOP to opt out"</li>
+                <li><strong>Documentation:</strong> All opt-ins logged with timestamp and phone number</li>
+                <li><strong>Honor Opt-Outs Immediately:</strong> STOP requests processed within 24 hours</li>
+            </ul>
+        </div>
+        
+        <div class="message-examples">
+            <h3>Message Examples</h3>
+            
+            <h4>Welcome Message (After START)</h4>
+            <div class="message-box">
+                Welcome to ReguGuard! We help you stay compliant with license requirements. You'll receive alerts about license expirations, renewal deadlines, and compliance updates. Reply STOP to opt out. Reply HELP for assistance.
+            </div>
+            
+            <h4>Compliance Alert</h4>
+            <div class="message-box">
+                ReguGuard Alert: Your security guard license expires on [date]. Please renew to maintain compliance. Reply STOP to opt out.
+            </div>
+            
+            <h4>Renewal Reminder</h4>
+            <div class="message-box">
+                ReguGuard: Your license renewal deadline is approaching. Renew by [date] to avoid expiration. Reply STOP to opt out.
+            </div>
+            
+            <h4>Opt-Out Confirmation</h4>
+            <div class="message-box">
+                You have been unsubscribed from ReguGuard notifications. You will no longer receive compliance alerts. Text START to re-enroll.
+            </div>
+        </div>
+        
+        <h2>A2P 10DLC Campaign Description</h2>
+        <p><strong>For use in Twilio A2P 10DLC registration:</strong></p>
+        <p>This campaign sends compliance notifications and license expiration reminders to security guard employees. Messages include alerts about upcoming license expirations, renewal deadlines, and compliance status updates to help ensure employees maintain valid credentials required for their positions. All messages are sent only to employees who have explicitly opted in by texting START to our number, as disclosed during onboarding or through other communication channels.</p>
+        
+        <h2>End User Consent Description</h2>
+        <p><strong>For use in Twilio A2P 10DLC registration:</strong></p>
+        <p>Employees opt in to receive compliance notifications by initiating contact via SMS. During onboarding documentation, employees are informed that they can opt in to receive compliance notifications by texting our number with the keyword START. Employees may also discover the service through other company communications. Once an employee texts our number, they receive a welcome message explaining the service, message frequency, and how to opt out. Explicit consent is captured when the employee replies with START or JOIN. All messages include opt-out instructions (Reply STOP), and opt-out requests are honored immediately. Employees can re-enroll at any time by texting START again.</p>
+    </div>
+</body>
+</html>
+

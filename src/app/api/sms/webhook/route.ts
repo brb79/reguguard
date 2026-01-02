@@ -171,32 +171,29 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
         if (employee) {
             console.log(`Found employee: ${employee.firstName} ${employee.lastName} (${employee.id})`);
 
-            // Create a general inquiry conversation
-            const result = await conversationService.startGeneralConversation({
-                clientId: employee.clientId,
-                employeeId: employee.id,
-                phoneNumber: fromNumber,
-            });
+            // Check if the message is an opt-in keyword (START or JOIN)
+            const normalizedMessage = messageBody.trim().toUpperCase();
+            const isOptInKeyword = normalizedMessage === 'START' || normalizedMessage === 'JOIN';
 
-            if (result.success && result.conversationId) {
-                console.log(`Created general conversation: ${result.conversationId}`);
+            if (isOptInKeyword) {
+                // Create a general inquiry conversation (they've opted in)
+                const result = await conversationService.startGeneralConversation({
+                    clientId: employee.clientId,
+                    employeeId: employee.id,
+                    phoneNumber: fromNumber,
+                });
 
-                // Process the user's original message instead of sending a generic welcome
-                if (messageBody) {
-                    await conversationService.handleTextCommand(result.conversationId, messageBody);
-                } else {
-                    // Only send welcome if they didn't include a message
-                    const welcomeMessage =
-                        `👋 Hi ${employee.firstName}! I'm the ReguGuard Compliance Assistant.\n\n` +
-                        `I can help you with:\n` +
-                        `• License renewals - send a 📸 photo\n` +
-                        `• Compliance questions\n` +
-                        `• Expiration dates & requirements\n\n` +
-                        `How can I assist you today?`;
+                if (result.success && result.conversationId) {
+                    console.log(`Created general conversation with opt-in: ${result.conversationId}`);
+
+                    // Send opt-in confirmation
+                    const confirmationMessage = messageTemplates.optInConfirmation({
+                        firstName: employee.firstName,
+                    });
 
                     await smsService.send({
                         to: fromNumber,
-                        body: welcomeMessage,
+                        body: confirmationMessage,
                     });
 
                     // Log the outbound message
@@ -205,19 +202,54 @@ export const POST = withErrorHandling(async (req: NextRequest) => {
                         direction: 'outbound',
                         from: twilioBody.To,
                         to: fromNumber,
-                        body: welcomeMessage,
+                        body: confirmationMessage,
                         mediaUrls: [],
-                        twilioSid: 'welcome_auto',
+                        twilioSid: 'opt_in_confirmation',
                     });
                 }
+            } else {
+                // Send opt-in request (don't create conversation yet)
+                const optInMessage = messageTemplates.initialOptInRequest({
+                    firstName: employee.firstName,
+                });
+
+                await smsService.send({
+                    to: fromNumber,
+                    body: optInMessage,
+                });
+
+                // Log the outbound message (no conversation ID yet)
+                await logMessage(supabase, {
+                    conversationId: null,
+                    direction: 'outbound',
+                    from: twilioBody.To,
+                    to: fromNumber,
+                    body: optInMessage,
+                    mediaUrls: [],
+                    twilioSid: 'opt_in_request',
+                });
+
+                console.log(`Sent opt-in request to ${employee.firstName} ${employee.lastName}`);
             }
         } else {
             console.log(`Unknown phone number: ${fromNumber}`);
 
-            // Send a response even for unknown numbers
+            // Send unknown employee message
+            const unknownMessage = messageTemplates.unknownEmployee();
             await smsService.send({
                 to: fromNumber,
-                body: `ReguGuard: We don't have your phone number in our system. Please contact your supervisor to update your contact information.`,
+                body: unknownMessage,
+            });
+
+            // Log the outbound message (no conversation ID)
+            await logMessage(supabase, {
+                conversationId: null,
+                direction: 'outbound',
+                from: twilioBody.To,
+                to: fromNumber,
+                body: unknownMessage,
+                mediaUrls: [],
+                twilioSid: 'unknown_employee',
             });
         }
 

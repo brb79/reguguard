@@ -19,6 +19,10 @@ const envSchema = z.object({
   TWILIO_AUTH_TOKEN: z.string().optional(),
   TWILIO_PHONE_NUMBER: z.string().optional(),
 
+  // Resend Email (optional for development)
+  RESEND_API_KEY: z.string().optional(),
+  FROM_EMAIL: z.string().email().optional().or(z.literal('')),
+
   // Google Gemini (optional for development)
   GOOGLE_AI_API_KEY: z.string().optional(),
 
@@ -55,6 +59,8 @@ export function getEnv(): Env {
     TWILIO_ACCOUNT_SID: process.env.TWILIO_ACCOUNT_SID,
     TWILIO_AUTH_TOKEN: process.env.TWILIO_AUTH_TOKEN,
     TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    FROM_EMAIL: process.env.FROM_EMAIL,
     GOOGLE_AI_API_KEY: process.env.GOOGLE_AI_API_KEY,
     WINTEAM_API_URL: process.env.WINTEAM_API_URL,
     WINTEAM_TENANT_ID: process.env.WINTEAM_TENANT_ID,
@@ -91,6 +97,11 @@ export const envChecks = {
   isTwilioConfigured: () => {
     const env = getEnv();
     return !!env.TWILIO_ACCOUNT_SID && !!env.TWILIO_AUTH_TOKEN && !!env.TWILIO_PHONE_NUMBER;
+  },
+
+  isResendConfigured: () => {
+    const env = getEnv();
+    return !!env.RESEND_API_KEY;
   },
 
   isVisionConfigured: () => {

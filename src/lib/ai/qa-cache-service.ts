@@ -106,13 +106,14 @@ class QACacheService {
                 console.error('[QACache] Failed to record hit:', err)
             );
 
-                const typedData = data as any;
+            const typedData = data as any;
             return {
                 answer: typedData.answer,
                 sources: Array.isArray(typedData.sources) ? typedData.sources : [],
                 confidence: typedData.confidence,
                 hitCount: typedData.hit_count,
                 createdAt: new Date(typedData.created_at),
+            };
             };
         } catch (error) {
             console.error('[QACache] Error getting cached response:', error);
@@ -154,7 +155,7 @@ class QACacheService {
                         expires_at: expiresAt.toISOString(),
                         last_accessed_at: new Date().toISOString(),
                         hit_count: 0,
-                    },
+                    } as any,
                     {
                         onConflict: 'question_fingerprint,state_code,license_type',
                         ignoreDuplicates: false,
@@ -178,7 +179,7 @@ class QACacheService {
         licenseType?: string
     ): Promise<void> {
         try {
-            await this.supabase.rpc('increment_qa_cache_hit', {
+            await (this.supabase as any).rpc('increment_qa_cache_hit', {
                 p_fingerprint: fingerprint,
                 p_state_code: stateCode.toUpperCase(),
                 p_license_type: licenseType || null,
@@ -188,7 +189,6 @@ class QACacheService {
             let updateQuery = this.supabase
                 .from('compliance_qa_cache')
                 .update({
-                    hit_count: this.supabase.from('compliance_qa_cache').select('hit_count').single().then(r => (r.data?.hit_count || 0) + 1),
                     last_accessed_at: new Date().toISOString(),
                 })
                 .eq('question_fingerprint', fingerprint)
@@ -246,10 +246,11 @@ class QACacheService {
                 return { hitRate: 0, totalCached: 0, avgConfidence: 0 };
             }
 
-            const totalCached = totalData.length;
-            const totalHits = totalData.reduce((sum, row) => sum + row.hit_count, 0);
+            const data: any[] = totalData;
+            const totalCached = data.length;
+            const totalHits = data.reduce((sum: number, row: any) => sum + row.hit_count, 0);
             const avgConfidence =
-                totalData.reduce((sum, row) => sum + row.confidence, 0) / totalCached;
+                data.reduce((sum: number, row: any) => sum + row.confidence, 0) / totalCached;
 
             // Hit rate = (total hits) / (total cached entries + total hits)
             // This represents cache effectiveness

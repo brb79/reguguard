@@ -1,0 +1,310 @@
+/**
+ * Compliance Tools for Genkit AI Agent
+ *
+ * Tools that enable the Q&A agent to:
+ * - Search state regulations
+ * - Check employee records
+ * - Calculate renewal costs
+ * - Find training providers
+ */
+
+import { defineTool } from '@genkit-ai/core';
+import { z } from 'zod';
+import { createClient } from '@/lib/supabase/server';
+import { readFileSync } from 'fs';
+import { join } from 'path';
+
+// ============================================================================
+// Types
+// ============================================================================
+
+interface StateMetadata {
+  state: string;
+  licenseTypes: Record<string, {
+    name: string;
+    description: string;
+    requirements: {
+      training: { hours: number; topics: string[] };
+      fees: { application: number; renewal: number; total: number };
+      renewalPeriod: { value: number; unit: string };
+    };
+    prerequisites?: string[];
+  }>;
+  trainingProviders?: Array<{
+    name: string;
+    location: string;
+    phone: string;
+    website?: string;
+  }>;
+}
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+function loadStateMetadata(stateCode: string): StateMetadata | null {
+  try {
+    const metadataPath = join(process.cwd(), 'knowledge', 'states', stateCode, 'metadata.json');
+    const content = readFileSync(metadataPath, 'utf-8');
+    return JSON.parse(content);
+  } catch (error) {
+    console.error(`Failed to load metadata for state ${stateCode}:`, error);
+    return null;
+  }
+}
+
+function searchRequirements(
+  metadata: StateMetadata,
+  query: string,
+  licenseType?: string
+): Array<{ title: string; content: string; source: string }> {
+  const results: Array<{ title: string; content: string; source: string }> = [];
+  const queryLower = query.toLowerCase();
+
+  // Search through license types
+  for (const [typeKey, typeData] of Object.entries(metadata.licenseTypes)) {
+    // Filter by license type if specified
+    if (licenseType && !typeKey.toLowerCase().includes(licenseType.toLowerCase())) {
+      continue;
+    }
+
+    // Check if query matches this license type
+    const matches =
+      typeData.name.toLowerCase().includes(queryLower) ||
+      typeData.description.toLowerCase().includes(queryLower) ||
+      JSON.stringify(typeData.requirements).toLowerCase().includes(queryLower);
+
+    if (matches) {
+      results.push({
+        title: typeData.name,
+        content: `${typeData.description}\n\nRequirements:\n- Training: ${typeData.requirements.training.hours} hours\n- Fees: $${typeData.requirements.fees.total}\n- Renewal Period: Every ${typeData.requirements.renewalPeriod.value} ${typeData.requirements.renewalPeriod.unit}`,
+        source: `${metadata.state} State Regulations`,
+      });
+    }
+  }
+
+  return results;
+}
+
+// ============================================================================
+// Tool 1: Search State Regulations
+// ============================================================================
+
+export const searchStateRegulations = defineTool(
+  {
+    name: 'searchStateRegulations',
+    description: 'Search state-specific licensing regulations and requirements for security guards',
+    inputSchema: z.object({
+      stateCode: z.string().length(2).describe('Two-letter state code (e.g., VA, TX, CA)'),
+      licenseType: z.string().optional().describe('Optional license type filter (e.g., armed, unarmed)'),
+      query: z.string().describe('Search query for regulations'),
+    }),
+    outputSchema: z.object({
+      regulations: z.array(z.object({
+        title: z.string(),
+        content: z.string(),
+        source: z.string(),
+      })),
+    }),
+  },
+  async ({ stateCode, licenseType, query }) => {
+    const metadata = loadStateMetadata(stateCode.toUpperCase());
+
+    if (!metadata) {
+      return {
+        regulations: [{
+          title: 'State Not Found',
+          content: `No regulation data available for state ${stateCode}. Please check the state code.`,
+          source: 'ReguGuard Knowledge Base',
+        }],
+      };
+    }
+
+    const regulations = searchRequirements(metadata, query, licenseType);
+
+    if (regulations.length === 0) {
+      return {
+        regulations: [{
+          title: 'No Results',
+          content: `No regulations found matching "${query}" for ${stateCode}.`,
+          source: `${stateCode} State Regulations`,
+        }],
+      };
+    }
+
+    return { regulations };
+  }
+);
+
+// ============================================================================
+// Tool 2: Check Employee Record
+// ============================================================================
+
+export const checkEmployeeRecord = defineTool(
+  {
+    name: 'checkEmployeeRecord',
+    description: 'Get employee license and renewal information from the database',
+    inputSchema: z.object({
+      employeeId: z.string().describe('Employee ID to look up'),
+    }),
+    outputSchema: z.object({
+      employee: z.object({
+        name: z.string(),
+        licenses: z.array(z.object({
+          type: z.string(),
+          state: z.string(),
+          expirationDate: z.string(),
+          status: z.string(),
+        })),
+      }),
+    }),
+  },
+  async ({ employeeId }) => {
+    const supabase = await createClient();
+
+    const { data: employee, error: empError } = await supabase
+      .from('employees_cache')
+      .select('first_name, last_name')
+      .eq('id', employeeId)
+      .single();
+
+    if (empError || !employee) {
+      return {
+        employee: {
+          name: 'Unknown Employee',
+          licenses: [],
+        },
+      };
+    }
+
+    const { data: licenses } = await supabase
+      .from('licenses_cache')
+      .select('description, matched_state, expiration_date, license_stage')
+      .eq('employee_id', employeeId);
+
+    const formattedLicenses = (licenses || []).map(license => ({
+      type: license.description || 'Unknown License',
+      state: license.matched_state || 'Unknown',
+      expirationDate: license.expiration_date || 'Unknown',
+      status: license.license_stage || 'Unknown',
+    }));
+
+    return {
+      employee: {
+        name: `${employee.first_name} ${employee.last_name}`,
+        licenses: formattedLicenses,
+      },
+    };
+  }
+);
+
+// ============================================================================
+// Tool 3: Calculate Renewal Cost
+// ============================================================================
+
+export const calculateRenewalCost = defineTool(
+  {
+    name: 'calculateRenewalCost',
+    description: 'Calculate total renewal cost including application fees, renewal fees, and training costs',
+    inputSchema: z.object({
+      stateCode: z.string().length(2).describe('Two-letter state code'),
+      licenseType: z.string().describe('License type (e.g., armed_security, unarmed_security)'),
+    }),
+    outputSchema: z.object({
+      totalCost: z.number(),
+      breakdown: z.object({
+        applicationFee: z.number(),
+        renewalFee: z.number(),
+        trainingCost: z.number().optional(),
+      }),
+    }),
+  },
+  async ({ stateCode, licenseType }) => {
+    const metadata = loadStateMetadata(stateCode.toUpperCase());
+
+    if (!metadata) {
+      return {
+        totalCost: 0,
+        breakdown: {
+          applicationFee: 0,
+          renewalFee: 0,
+        },
+      };
+    }
+
+    // Find matching license type
+    const matchedType = Object.entries(metadata.licenseTypes).find(
+      ([key, data]) =>
+        key.toLowerCase().includes(licenseType.toLowerCase()) ||
+        data.name.toLowerCase().includes(licenseType.toLowerCase())
+    );
+
+    if (!matchedType) {
+      return {
+        totalCost: 0,
+        breakdown: {
+          applicationFee: 0,
+          renewalFee: 0,
+        },
+      };
+    }
+
+    const [, typeData] = matchedType;
+    const fees = typeData.requirements.fees;
+
+    return {
+      totalCost: fees.total,
+      breakdown: {
+        applicationFee: fees.application,
+        renewalFee: fees.renewal,
+        trainingCost: fees.total - fees.application - fees.renewal,
+      },
+    };
+  }
+);
+
+// ============================================================================
+// Tool 4: Find Training Providers
+// ============================================================================
+
+export const findTrainingProviders = defineTool(
+  {
+    name: 'findTrainingProviders',
+    description: 'Find approved training providers for a specific license type in a state',
+    inputSchema: z.object({
+      stateCode: z.string().length(2).describe('Two-letter state code'),
+      licenseType: z.string().describe('License type (e.g., armed_security, unarmed_security)'),
+      zipCode: z.string().optional().describe('Optional zip code to filter by location'),
+    }),
+    outputSchema: z.object({
+      providers: z.array(z.object({
+        name: z.string(),
+        location: z.string(),
+        phone: z.string(),
+        website: z.string().optional(),
+        nextAvailable: z.string().optional(),
+      })),
+    }),
+  },
+  async ({ stateCode, licenseType, zipCode }) => {
+    const metadata = loadStateMetadata(stateCode.toUpperCase());
+
+    if (!metadata || !metadata.trainingProviders) {
+      return {
+        providers: [],
+      };
+    }
+
+    // For now, return all providers for the state
+    // In a real implementation, we'd filter by license type and proximity to zipCode
+    const providers = metadata.trainingProviders.map(provider => ({
+      name: provider.name,
+      location: provider.location,
+      phone: provider.phone,
+      website: provider.website,
+      nextAvailable: undefined, // Would require API integration to check availability
+    }));
+
+    return { providers };
+  }
+);

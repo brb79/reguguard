@@ -23,15 +23,47 @@ import { complianceQAService } from '../ai/compliance-qa-service';
 // ============================================================================
 
 export const messageTemplates = {
+    // ========================================================================
+    // Opt-In/Consent Messages
+    // ========================================================================
+
+    initialOptInRequest: (data: { firstName: string }) =>
+        `👋 Hi ${data.firstName}! I'm Chris, your AI compliance agent from SecTek. ` +
+        `I help you stay compliant with your security guard license requirements. ` +
+        `You'll receive alerts about license expirations, renewal deadlines, and compliance updates. ` +
+        `Reply START to opt in.`,
+
+    optInConfirmation: (data: { firstName: string }) =>
+        `Chris from SecTek: Thanks, ${data.firstName}! You're now enrolled. ` +
+        `I'll send you alerts about your license status as renewal deadlines approach (approx. 2-5 msgs/month) and can help you through the process. ` +
+        `Reply HELP anytime for assistance, or STOP to opt out.`,
+
+    optOutConfirmation: () =>
+        `You have been unsubscribed from SecTek compliance notifications. ` +
+        `You will no longer receive alerts. ` +
+        `Text START anytime to re-enroll.`,
+
+    unknownEmployee: () =>
+        `We can't verify your employment status based on this phone number. ` +
+        `If you believe this is an error, please update your phone number in eHub and try again, ` +
+        `or contact your supervisor for assistance.`,
+
+    pendingOptIn: (data: { firstName: string }) =>
+        `Hi ${data.firstName}! To get started, please reply START to opt in to compliance notifications.`,
+
+    // ========================================================================
+    // License Renewal Flow Messages
+    // ========================================================================
+
     requestPhoto: (data: { licenseName: string; expirationDate: string }) =>
-        `ReguGuard: Your ${data.licenseName} expires ${data.expirationDate}. ` +
+        `Chris - SecTek: Your ${data.licenseName} expires ${data.expirationDate}. ` +
         `📸 Reply with a PHOTO of your renewed license to update our records. ` +
         `Reply HELP for assistance.`,
 
     confirmExtraction: (data: { expirationDate: string; licenseNumber: string; confidence: number }) => {
         const confidenceEmoji = data.confidence >= 0.8 ? '✅' : '⚠️';
         return (
-            `ReguGuard: Got your license photo! ${confidenceEmoji}\n\n` +
+            `Chris - SecTek: Got your license photo! ${confidenceEmoji}\n\n` +
             `📅 New Expiration: ${data.expirationDate}\n` +
             `🔢 License #: ${data.licenseNumber}\n\n` +
             `Reply YES to confirm or NO to submit a new photo.`
@@ -39,33 +71,38 @@ export const messageTemplates = {
     },
 
     updateSuccess: () =>
-        `✅ ReguGuard: Your license has been updated! Thank you for keeping your credentials current.`,
+        `✅ Chris - SecTek: Your license has been updated! Thank you for keeping your credentials current.`,
 
     extractionFailed: () =>
-        `❌ ReguGuard: We couldn't read your license photo. ` +
+        `❌ Chris - SecTek: We couldn't read your license photo. ` +
         `Please send a clearer image with good lighting.`,
 
     photoReceived: () =>
-        `📥 ReguGuard: Photo received! Processing... We'll text you shortly with the extracted info.`,
+        `📥 Chris - SecTek: Photo received! Processing... I'll text you shortly with the extracted info.`,
 
     conversationExpired: () =>
-        `ReguGuard: Your license renewal request has expired. ` +
+        `Chris - SecTek: Your license renewal request has expired. ` +
         `Please contact your supervisor for assistance.`,
 
     syncFailed: () =>
-        `⚠️ ReguGuard: There was an issue updating your license. ` +
+        `⚠️ Chris - SecTek: There was an issue updating your license. ` +
         `Our team has been notified and will resolve this shortly.`,
 
+    // ========================================================================
+    // Help & Support Messages
+    // ========================================================================
+
     help: () =>
-        `ReguGuard Help:\n` +
+        `Chris - SecTek Help:\n` +
         `• Send a PHOTO of your renewed license\n` +
         `• Reply YES to confirm extracted info\n` +
         `• Reply NO to submit a new photo\n` +
         `• Ask a compliance question (state/license)\n` +
+        `• Reply STOP to opt out\n` +
         `• Contact your supervisor for other issues`,
 
     unknownCommand: () =>
-        `ReguGuard: I didn't understand that. ` +
+        `Chris - SecTek: I didn't understand that. ` +
         `Reply with a photo of your license, YES to confirm, NO to retry, or HELP for assistance.`,
 };
 
@@ -838,6 +875,17 @@ class ConversationService {
         const normalized = message.trim().toUpperCase();
 
         switch (normalized) {
+            case 'START':
+            case 'JOIN':
+                // User is already opted in (they have an active conversation)
+                // Send a friendly confirmation
+                await smsService.send({
+                    to: context.phoneNumber,
+                    body: `You're already enrolled! I'm here to help with your license compliance. ` +
+                          `Reply HELP for assistance, or send a photo of your renewed license.`,
+                });
+                return { handled: true, response: 'already_opted_in' };
+
             case 'HELP':
             case 'INFO':
                 await smsService.send({
@@ -860,12 +908,15 @@ class ConversationService {
 
             case 'STOP':
             case 'CANCEL':
+            case 'UNSUBSCRIBE':
+            case 'QUIT':
+                // User wants to opt out completely
                 await this.updateConversationStatus(conversationId, 'expired');
                 await smsService.send({
                     to: context.phoneNumber,
-                    body: `ReguGuard: Your renewal request has been cancelled. Contact your supervisor if you need assistance.`,
+                    body: messageTemplates.optOutConfirmation(),
                 });
-                return { handled: true, response: 'cancelled' };
+                return { handled: true, response: 'opted_out' };
 
             default:
                 // Send context-aware unknown command message
@@ -880,7 +931,7 @@ class ConversationService {
                 } else if (currentStatus === 'awaiting_confirmation') {
                     await smsService.send({
                         to: context.phoneNumber,
-                        body: `ReguGuard: Please reply YES to confirm your license info, or NO to submit a new photo.`,
+                        body: `Chris - SecTek: Please reply YES to confirm your license info, or NO to submit a new photo.`,
                     });
                 } else {
                     await smsService.send({

@@ -1,0 +1,153 @@
+/**
+ * Compliance Q&A Agent Flow
+ *
+ * Agent that answers employee questions about security guard license renewals.
+ * Uses tools to get real-time data from regulations and employee records.
+ */
+
+import { defineFlow } from '@genkit-ai/flow';
+import { gemini15Pro } from '@genkit-ai/googleai';
+import { z } from 'zod';
+import {
+  searchStateRegulations,
+  checkEmployeeRecord,
+  calculateRenewalCost,
+  findTrainingProviders,
+} from '../tools/compliance-tools';
+
+// ============================================================================
+// Helper Functions
+// ============================================================================
+
+/**
+ * Extract sources from tool calls made during the conversation
+ */
+function extractSources(toolCalls: any[]): string[] {
+  const sources = new Set<string>();
+
+  if (!toolCalls) return [];
+
+  for (const toolCall of toolCalls) {
+    if (toolCall.name === 'searchStateRegulations' && toolCall.result?.regulations) {
+      for (const reg of toolCall.result.regulations) {
+        if (reg.source) {
+          sources.add(reg.source);
+        }
+      }
+    }
+  }
+
+  return Array.from(sources);
+}
+
+/**
+ * Extract actionable next steps from agent response
+ */
+function extractActions(text: string): string[] {
+  const actions: string[] = [];
+
+  // Look for common action patterns
+  const actionPatterns = [
+    /(?:next step|you should|you need to|please|make sure to|don't forget to):\s*([^.!?\n]+)/gi,
+    /^\s*[-•]\s*(.+?)$/gm, // Bullet points
+  ];
+
+  for (const pattern of actionPatterns) {
+    const matches = text.matchAll(pattern);
+    for (const match of matches) {
+      const action = match[1]?.trim();
+      if (action && action.length > 10 && action.length < 150) {
+        actions.push(action);
+      }
+    }
+  }
+
+  // Remove duplicates
+  return Array.from(new Set(actions));
+}
+
+// ============================================================================
+// Agent Flow
+// ============================================================================
+
+export const complianceQAAgent = defineFlow(
+  {
+    name: 'complianceQAAgent',
+    inputSchema: z.object({
+      question: z.string(),
+      employeeId: z.string(),
+      conversationHistory: z.array(z.object({
+        role: z.enum(['user', 'assistant']),
+        content: z.string(),
+      })).optional(),
+    }),
+    outputSchema: z.object({
+      answer: z.string(),
+      sources: z.array(z.string()),
+      suggestedActions: z.array(z.string()).optional(),
+    }),
+  },
+  async ({ question, employeeId, conversationHistory = [] }) => {
+    // Build conversation messages
+    const messages = [
+      {
+        role: 'system' as const,
+        content: `You are a helpful compliance assistant for ReguGuard, a security guard license management platform.
+
+Your role is to help security guards understand and manage their license renewals. You have access to:
+- State-specific licensing regulations and requirements
+- Employee license records and expiration dates
+- Renewal cost calculations
+- Approved training provider listings
+
+Guidelines:
+- Be conversational and friendly, like a helpful colleague
+- Keep responses concise and SMS-friendly (under 500 characters when possible)
+- Use the tools available to you to get accurate, real-time information
+- Cite sources for regulatory information (state regulations, official requirements)
+- Provide actionable next steps when relevant
+- If you don't have information, be honest and suggest alternatives
+- NEVER use commands like "Reply DONE" or "Text HELP" - always use natural conversational language
+
+Example good response: "Your Virginia armed guard license expires in 30 days. To renew, you'll need 16 hours of training and the renewal fee is $150. Would you like me to find training providers near you?"
+
+Example bad response: "Reply with your state code to continue, or HELP for assistance."`,
+      },
+      // Add conversation history
+      ...conversationHistory.map(turn => ({
+        role: turn.role as 'user' | 'assistant',
+        content: turn.content,
+      })),
+      // Add current question
+      {
+        role: 'user' as const,
+        content: question,
+      },
+    ];
+
+    // Call Gemini with tools
+    const result = await gemini15Pro.generate({
+      messages,
+      tools: [
+        searchStateRegulations,
+        checkEmployeeRecord,
+        calculateRenewalCost,
+        findTrainingProviders,
+      ],
+      config: {
+        temperature: 0.3, // Lower temperature for more factual, consistent responses
+        maxOutputTokens: 500, // Keep responses concise for SMS
+      },
+    });
+
+    // Extract sources and actions
+    const sources = extractSources(result.toolCalls || []);
+    const suggestedActions = extractActions(result.text);
+
+    return {
+      answer: result.text,
+      sources,
+      suggestedActions: suggestedActions.length > 0 ? suggestedActions : undefined,
+    };
+  }
+);

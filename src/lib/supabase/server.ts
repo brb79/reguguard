@@ -1,4 +1,5 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { Database } from './types'
 
@@ -29,6 +30,23 @@ export async function createClient() {
                     }
                 },
             },
+        }
+    )
+}
+
+/**
+ * Create a service role client for server-side operations that bypass RLS
+ * Use this for autonomous agents and background jobs
+ */
+export function createServiceClient() {
+    return createSupabaseClient<Database>(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
+        {
+            auth: {
+                autoRefreshToken: false,
+                persistSession: false
+            }
         }
     )
 }
