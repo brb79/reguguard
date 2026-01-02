@@ -74,8 +74,8 @@ export interface MonitoringResult {
 export interface DetectedChange {
     change_type: 'breaking' | 'non_breaking' | 'addition' | 'removal' | 'update';
     field_path: string;
-    old_value: any;
-    new_value: any;
+    old_value: unknown;
+    new_value: unknown;
     description: string;
     severity: 'critical' | 'high' | 'medium' | 'low';
 }
@@ -94,7 +94,7 @@ export interface WebScrapingResult {
     url: string;
     success: boolean;
     content: string;
-    extracted_data?: any;
+    extracted_data?: unknown;
     error?: string;
 }
 
@@ -109,7 +109,7 @@ export interface AIExtractionResult {
     success: boolean;
     extracted_metadata?: StateMetadata;
     confidence: number;
-    raw_response?: any;
+    raw_response?: unknown;
     error?: string;
 }
 

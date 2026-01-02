@@ -102,10 +102,11 @@ class QACacheService {
             }
 
             // Increment hit counter asynchronously (don't await)
-            this.recordHit(fingerprint, stateCode, licenseType).catch((err: any) =>
+            this.recordHit(fingerprint, stateCode, licenseType).catch((err: unknown) =>
                 console.error('[QACache] Failed to record hit:', err)
             );
 
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const typedData = data as any;
             return {
                 answer: typedData.answer,
@@ -114,7 +115,7 @@ class QACacheService {
                 hitCount: typedData.hit_count,
                 createdAt: new Date(typedData.created_at),
             };
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('[QACache] Error getting cached response:', error);
             return null;
         }
@@ -154,6 +155,7 @@ class QACacheService {
                         expires_at: expiresAt.toISOString(),
                         last_accessed_at: new Date().toISOString(),
                         hit_count: 0,
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     } as any,
                     {
                         onConflict: 'question_fingerprint,state_code,license_type',
@@ -164,7 +166,7 @@ class QACacheService {
             if (error) {
                 console.error('[QACache] Error caching response:', error);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('[QACache] Error in set():', error);
         }
     }
@@ -178,13 +180,15 @@ class QACacheService {
         licenseType?: string
     ): Promise<void> {
         try {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             await (this.supabase as any).rpc('increment_qa_cache_hit', {
                 p_fingerprint: fingerprint,
                 p_state_code: stateCode.toUpperCase(),
                 p_license_type: licenseType || null,
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
             // Fallback to manual increment if RPC doesn't exist
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let updateQuery = (this.supabase as any)
                 .from('compliance_qa_cache')
                 .update({
@@ -225,7 +229,7 @@ class QACacheService {
             }
 
             return data?.length || 0;
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('[QACache] Error in cleanup():', error);
             return 0;
         }
@@ -245,11 +249,11 @@ class QACacheService {
                 return { hitRate: 0, totalCached: 0, avgConfidence: 0 };
             }
 
-            const data: any[] = totalData;
+            const data = totalData as unknown as { hit_count: number; confidence: number }[];
             const totalCached = data.length;
-            const totalHits = data.reduce((sum: number, row: any) => sum + row.hit_count, 0);
+            const totalHits = data.reduce((sum, row) => sum + row.hit_count, 0);
             const avgConfidence =
-                data.reduce((sum: number, row: any) => sum + row.confidence, 0) / totalCached;
+                data.reduce((sum, row) => sum + row.confidence, 0) / totalCached;
 
             // Hit rate = (total hits) / (total cached entries + total hits)
             // This represents cache effectiveness
@@ -262,7 +266,7 @@ class QACacheService {
                 totalCached,
                 avgConfidence: Math.round(avgConfidence * 100) / 100,
             };
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('[QACache] Error getting stats:', error);
             return { hitRate: 0, totalCached: 0, avgConfidence: 0 };
         }
