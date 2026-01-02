@@ -16,10 +16,10 @@ export class ComplianceImpactReporter {
         oldMetadata: StateMetadata,
         newMetadata: StateMetadata
     ): ComplianceImpactReport {
-        const breakingChanges = changes.filter(c => 
+        const breakingChanges = changes.filter(c =>
             c.change_type === 'breaking' || c.change_type === 'removal' || c.severity === 'critical'
         );
-        const nonBreakingChanges = changes.filter(c => 
+        const nonBreakingChanges = changes.filter(c =>
             c.change_type !== 'breaking' && c.change_type !== 'removal' && c.severity !== 'critical'
         );
 
@@ -82,7 +82,7 @@ export class ComplianceImpactReporter {
         const impacts: string[] = [];
 
         // Training hour changes
-        const trainingChanges = breakingChanges.filter(c => 
+        const trainingChanges = breakingChanges.filter(c =>
             c.field_path.includes('training_hours')
         );
         if (trainingChanges.length > 0) {
@@ -90,7 +90,7 @@ export class ComplianceImpactReporter {
         }
 
         // Renewal period changes
-        const renewalChanges = breakingChanges.filter(c => 
+        const renewalChanges = breakingChanges.filter(c =>
             c.field_path.includes('renewal_period_months')
         );
         if (renewalChanges.length > 0) {
@@ -98,7 +98,7 @@ export class ComplianceImpactReporter {
         }
 
         // Requirements changes
-        const requirementChanges = breakingChanges.filter(c => 
+        const requirementChanges = breakingChanges.filter(c =>
             c.field_path.includes('requirements')
         );
         if (requirementChanges.length > 0) {
@@ -139,14 +139,14 @@ export class ComplianceImpactReporter {
             recommendations.push('Update training programs to meet new requirements.');
         }
 
-        const trainingChanges = breakingChanges.filter(c => 
+        const trainingChanges = breakingChanges.filter(c =>
             c.field_path.includes('training_hours')
         );
         if (trainingChanges.length > 0) {
             recommendations.push('Schedule additional training for employees to meet new hour requirements.');
         }
 
-        const renewalChanges = breakingChanges.filter(c => 
+        const renewalChanges = breakingChanges.filter(c =>
             c.field_path.includes('renewal_period_months')
         );
         if (renewalChanges.length > 0) {
@@ -183,7 +183,8 @@ export class ComplianceImpactReporter {
                 // For additions/removals, check the value
                 const licenseType = change.new_value || change.old_value;
                 if (licenseType && typeof licenseType === 'object' && 'type' in licenseType) {
-                    affectedTypes.add(licenseType.type);
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    affectedTypes.add((licenseType as any).type);
                 }
             }
         }
